@@ -35,6 +35,14 @@ const ASSETS = [
   { src: 'assets/foto-cumprimento.jpg', name: 'Cumprimento', nw: 960, nh: 1708, k: 0.5 },
   { src: 'assets/foto-fachada.jpg', name: 'Fachada do CASA', nw: 960, nh: 1708, k: 0.5 },
   { src: 'assets/foto-visita-cirurgia.jpg', name: 'Visita ao centro cirúrgico', nw: 960, nh: 1708, k: 0.5 },
+  { src: 'assets/dia-comissao.jpg', name: 'Comissão de Meio Ambiente', nw: 720, nh: 1280, k: 1 },
+  { src: 'assets/dia-tribuna.jpg', name: 'Tribuna da Câmara', nw: 720, nh: 1280, k: 1 },
+  { src: 'assets/dia-sofia-feldman.jpg', name: 'Hospital Sofia Feldman', nw: 720, nh: 1280, k: 1 },
+  { src: 'assets/dia-visita-grupo.jpg', name: 'Visita técnica Diamante/Olaria', nw: 960, nh: 1708, k: 0.5 },
+  { src: 'assets/dia-visita-moradora.jpg', name: 'Visita técnica: moradora', nw: 960, nh: 1708, k: 0.5 },
+  { src: 'assets/dia-visita-agente.jpg', name: 'Visita técnica: agente', nw: 960, nh: 1708, k: 0.5 },
+  { src: 'assets/dia-coworking.jpg', name: 'Coworking Barreiro', nw: 720, nh: 1280, k: 1 },
+  { src: 'assets/dia-demanda.jpg', name: 'Demanda atendida', nw: 720, nh: 1600, k: 1 },
   { src: 'assets/anuncio-blackzap.jpg', name: 'Anúncio BlackZAP', nw: 1600, nh: 1240, k: 1 },
   { src: 'assets/cabecalho.png', name: 'Cabeçalho', nw: 2784, nh: 601, k: 1 },
 ];
@@ -242,16 +250,73 @@ function templateBranco() {
   return { id: uid(), name: 'Página em branco', elements: [] };
 }
 
+// Pág. 2 – Dia a dia em ação: grade 3 × 3 de fotos com legenda, como nas edições de maio e junho
 function templateP2() {
-  const p = templateMateria();
-  p.tid = 'p2';
-  p.name = 'Pág. 2 (a definir)';
-  return p;
+  const S = 204.5;                                   // lado de cada foto
+  const xs = [MARGIN.l, (PAGE_W - S) / 2, MARGIN.r - S];
+  const ys = [238.5, 485, 731.5];
+  // [arquivo, largura, altura, fator de resolução, recorte quadrado na foto original (x, y, lado), legenda]
+  const fotos = [
+    ['dia-comissao.jpg', 720, 1280, 1, 0, 340, 720, 'Comissão de Meio Ambiente, Defesa\ndos Animais e Política Urbana'],
+    ['dia-tribuna.jpg', 720, 1280, 1, 160, 640, 560, 'Pronunciamento no plenário\nda Câmara Municipal'],
+    ['dia-sofia-feldman.jpg', 720, 1280, 1, 72, 370, 576, 'Emendas destinadas ao\nHospital Sofia Feldman'],
+    ['dia-visita-grupo.jpg', 960, 1708, 0.5, 120, 280, 710, 'Visita técnica sobre sinalização\nnos bairros Diamante e Olaria'],
+    ['dia-visita-moradora.jpg', 960, 1708, 0.5, 150, 280, 710, 'Conversa com moradores\ndo Diamante e do Olaria'],
+    ['dia-visita-agente.jpg', 960, 1708, 0.5, 200, 280, 710, 'Avaliação de melhorias\nde sinalização no local'],
+    ['dia-coworking.jpg', 720, 1280, 1, 10, 190, 700, 'Encontro no Coworking Barreiro\nsobre projetos sociais'],
+    ['foto-cumprimento.jpg', 960, 1708, 0.5, 0, 40, 960, 'Visita ao Centro Avançado de\nSaúde Animal – Buritis'],
+    ['dia-demanda.jpg', 720, 1600, 1, 0, 200, 720, 'Demanda atendida pelo gabinete'],
+  ];
+  const tiles = [];
+  fotos.forEach(([file, nw, nh, k, cx, cy, side, legenda], i) => {
+    const x = xs[i % 3], y = ys[Math.floor(i / 3)], f = S / side;
+    tiles.push(imageEl({
+      name: `Foto ${i + 1}`, src: 'assets/' + file, nw, nh, k,
+      x, y, w: S, h: S, ix: -cx * f, iy: -cy * f, iw: nw * f,
+    }));
+    tiles.push(textEl({
+      name: `Legenda ${i + 1}`, text: legenda, font: 'RobotoCondensed-Bold', size: 12.4, lh: 15.6,
+      color: '#ea5b27', align: 'center', x, y: y + S + 6, w: S, h: 32,
+    }));
+  });
+  return {
+    id: uid(), tid: 'p2', tver: 2, name: 'Dia a dia em ação', elements: [
+      rectEl({ name: 'Faixa da editoria', fill: COLORS.laranjaFaixa, x: 56.7, y: 85, w: 659, h: 40.1, locked: true }),
+      textEl({
+        name: 'Editoria', text: 'DIA A DIA EM AÇÃO', font: 'Roboto-Regular', size: 23.2, lh: 28,
+        color: COLORS.branco, align: 'center', x: 56.7, y: 92.07, w: 659, h: 28,
+      }),
+      textEl({
+        name: 'Título', text: 'Trabalho que não para!', font: 'Roboto-Black', size: 33, lh: 40,
+        color: COLORS.preto, align: 'center', x: 56.7, y: 162, w: 659, h: 42,
+      }),
+      ...tiles,
+      textEl({
+        name: 'Rodapé', text: '@wanderleyporto Conheça mais o trabalho do vereador!', font: 'Roboto-Bold', size: 16, lh: 20,
+        color: COLORS.preto, align: 'center', x: 56.7, y: 1004.9, w: 659, h: 20,
+      }),
+    ],
+  };
+}
+
+// Versões antigas de páginas do modelo. Se a página salva ainda estiver igual a uma delas
+// (ninguém mexeu), ela é trocada pela versão nova automaticamente.
+function legacyTemplates() {
+  const p2 = templateMateria();
+  p2.tid = 'p2';
+  p2.name = 'Pág. 2 (a definir)';
+  return [p2];
+}
+
+// Conteúdo da página sem os identificadores, para comparar versões.
+function pageSig(p) {
+  return JSON.stringify(p.elements.map(({ id, ...rest }) => rest));
 }
 
 // Páginas da edição atual, na ordem. Cada uma tem um "tid" fixo: quando uma página nova entra aqui,
 // quem já usa o editor recebe essa página automaticamente, sem perder o que já editou.
 function defaultState() {
   const pages = [templateCapa(), templateP2(), templateP3()];
+  pages.forEach(p => { p.tsig = pageSig(p); });
   return { version: 1, cur: 0, pages, seenTids: pages.map(p => p.tid) };
 }

@@ -107,10 +107,10 @@ function loadState() {
   try {
     const s = JSON.parse(localStorage.getItem(STORAGE_KEY));
     if (s && s.pages && s.pages.length) {
-      const added = addNewTemplatePages(s);
+      const added = addNewTemplatePages(s).concat(autoUpdateUntouched(s));
       const updated = s.pages.filter(hasTemplateUpdate).map(p => p.name);
       const msg = [];
-      if (added.length) msg.push('Nova página no modelo: ' + added.join(', ') + '.');
+      if (added.length) msg.push('Página nova ou atualizada no modelo: ' + added.join(', ') + '.');
       if (updated.length) msg.push('Versão nova disponível: ' + updated.join(', ') + ' (veja no painel da página).');
       if (msg.length) setTimeout(() => toast(msg.join(' '), 6000), 800);
       return s;
@@ -140,6 +140,25 @@ function useTemplateVersion() {
   selId = null; cropMode = false;
   commit(); renderAll();
   toast('Página atualizada. A sua versão anterior ficou logo abaixo na lista; apague se não precisar.', 6000);
+}
+
+// Página do modelo que ninguém editou: compara com a assinatura guardada (ou com versões antigas do modelo).
+function isUntouched(p) {
+  const sig = pageSig(p);
+  if (p.tsig) return sig === p.tsig;
+  return legacyTemplates().some(t => t.tid === p.tid && pageSig(t) === sig);
+}
+
+// Troca, sem perguntar, as páginas do modelo que têm versão nova e não foram editadas.
+function autoUpdateUntouched(s) {
+  const done = [];
+  s.pages.forEach((p, i) => {
+    if (hasTemplateUpdate(p) && isUntouched(p)) {
+      s.pages[i] = templateFor(p.tid);
+      done.push(s.pages[i].name);
+    }
+  });
+  return done;
 }
 
 // Insere no trabalho salvo as páginas do modelo que a pessoa ainda não recebeu.
