@@ -108,11 +108,38 @@ function loadState() {
     const s = JSON.parse(localStorage.getItem(STORAGE_KEY));
     if (s && s.pages && s.pages.length) {
       const added = addNewTemplatePages(s);
-      if (added.length) setTimeout(() => toast('Nova página no modelo: ' + added.join(', ')), 800);
+      const updated = s.pages.filter(hasTemplateUpdate).map(p => p.name);
+      const msg = [];
+      if (added.length) msg.push('Nova página no modelo: ' + added.join(', ') + '.');
+      if (updated.length) msg.push('Versão nova disponível: ' + updated.join(', ') + ' (veja no painel da página).');
+      if (msg.length) setTimeout(() => toast(msg.join(' '), 6000), 800);
       return s;
     }
   } catch (e) { /* sem acesso ao armazenamento */ }
   return defaultState();
+}
+
+// Modelo de uma página pelo seu "tid" (null se a página não veio do modelo).
+function templateFor(tid) {
+  return tid ? defaultState().pages.find(p => p.tid === tid) || null : null;
+}
+
+function hasTemplateUpdate(p) {
+  const t = templateFor(p.tid);
+  return !!t && (t.tver || 1) > (p.tver || 1);
+}
+
+// Troca a página atual pela do modelo; a versão da pessoa fica logo depois, como cópia.
+function useTemplateVersion() {
+  const old = page();
+  const fresh = templateFor(old.tid);
+  if (!fresh) return;
+  old.name = old.name.replace(/ \(sua versão anterior\)$/, '') + ' (sua versão anterior)';
+  delete old.tid;
+  state.pages.splice(state.cur, 0, fresh);
+  selId = null; cropMode = false;
+  commit(); renderAll();
+  toast('Página atualizada. A sua versão anterior ficou logo abaixo na lista; apague se não precisar.', 6000);
 }
 
 // Insere no trabalho salvo as páginas do modelo que a pessoa ainda não recebeu.
@@ -829,6 +856,7 @@ function renderPanel() {
       <div class="row"><label>Nome</label><input type="text" id="p-pagename" value="${esc(page().name)}"></div>
       <p class="muted">Tamanho: ${fmt(PAGE_W)} × ${fmt(PAGE_H)} pt (≈ 27,2 × 38 cm), margens de 56,7 pt.</p>
       <p class="muted">Clique em qualquer item da página para editar. Use a lista abaixo para pegar itens que estão por baixo de outros.</p>
+      ${templateNotice()}
       <h4>Camadas (de cima para baixo)</h4>${layersHtml()}
       <hr><button class="danger" data-act="reset">Restaurar modelo original</button>`;
     panel.innerHTML = h;
@@ -888,6 +916,17 @@ function renderPanel() {
       <button data-act="delete" class="danger">Apagar</button></div>
     <h4>Camadas</h4>${layersHtml()}`;
   panel.innerHTML = h;
+}
+
+function templateNotice() {
+  const p = page();
+  if (!templateFor(p.tid)) return '';
+  if (hasTemplateUpdate(p)) {
+    return `<div class="notice"><b>Há uma versão nova desta página no modelo.</b>
+      <p>Ela substitui esta página; a sua versão atual fica guardada logo abaixo, como cópia.</p>
+      <button class="primary" data-act="page-use-template">Usar a versão nova</button></div>`;
+  }
+  return `<div class="btnrow"><button data-act="page-use-template" title="Volta esta página ao modelo; a sua versão fica como cópia">Voltar esta página ao modelo</button></div>`;
 }
 
 function updatePanelGeom() {
@@ -1041,6 +1080,7 @@ async function runAction(act) {
     case 'page-materia': addPage(templateMateria()); break;
     case 'page-capa': addPage(templateCapa()); break;
     case 'page-branco': addPage(templateBranco()); break;
+    case 'page-use-template': useTemplateVersion(); break;
     case 'save-project': await saveProject(); break;
     case 'open-project': $('#fileProject').click(); break;
     case 'export-pdf': await exportPDF(); break;
@@ -1079,7 +1119,7 @@ function addPage(p) {
 function renderPagesList() {
   $('#pagesList').innerHTML = state.pages.map((p, i) => `
     <div class="pageItem ${i === state.cur ? 'cur' : ''}" data-page="${i}">
-      <span class="num">${i + 1}</span><span class="nm">${esc(p.name)}</span>
+      <span class="num">${i + 1}</span><span class="nm">${esc(p.name)}</span>${hasTemplateUpdate(p) ? '<span class="badge" title="Há uma versão nova desta página no modelo">●</span>' : ''}
       <button data-pmove="${i}:-1" title="Subir">↑</button><button data-pmove="${i}:1" title="Descer">↓</button>
       <button data-pdup="${i}" title="Duplicar página">⧉</button><button data-pdel="${i}" title="Apagar página">✕</button>
     </div>`).join('');

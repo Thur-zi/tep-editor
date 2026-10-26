@@ -151,7 +151,7 @@ function templateP3() {
       align: 'center', x: MARGIN.l + col * i, y: 866, w: col, h: 18 }),
   ];
   return {
-    id: uid(), tid: 'p3', name: 'Causa Animal', elements: [
+    id: uid(), tid: 'p3', tver: 2, name: 'Causa Animal', elements: [
       rectEl({ name: 'Faixa da editoria', fill: COLORS.laranjaFaixa, x: 56.7, y: 85, w: 659, h: 40.1, locked: true }),
       textEl({
         name: 'Editoria', text: 'CAUSA ANIMAL', font: 'Roboto-Regular', size: 23.2, lh: 28,
@@ -215,21 +215,24 @@ function templateP3() {
       ...num(2, '+1.700', 'exames'),
       rectEl({ name: 'Divisória 1', fill: COLORS.laranja, x: MARGIN.l + col - 0.5, y: 830, w: 1, h: 52 }),
       rectEl({ name: 'Divisória 2', fill: COLORS.laranja, x: MARGIN.l + col * 2 - 0.5, y: 830, w: 1, h: 52 }),
-      // box de serviço
+      // box de serviço: título centralizado e duas colunas iguais, separadas por um fio
       rectEl({ name: 'Box de serviço', fill: null, stroke: COLORS.verde, sw: 1.5, x: 56.7, y: 908, w: 659, h: 112.5 }),
       textEl({
         name: 'Serviço: título', text: 'Serviço', font: 'Roboto-Medium', size: 20, lh: 24, color: COLORS.laranja,
-        x: 72, y: 919, w: 300, h: 24,
+        align: 'center', x: 56.7, y: 916, w: 659, h: 24,
       }),
       textEl({
         name: 'Serviço: endereço',
         text: '**Casa (Centro Avançado de Saúde Animal)**\nRua Líbero Leone, 259, Bloco Carandá 2 – Buritis\n**Telefone:** (31) 2888-0909 - ramal 2',
-        font: 'Roboto-Regular', size: 11.5, lh: 16, color: COLORS.texto, x: 72, y: 947, w: 320, h: 48,
+        font: 'Roboto-Regular', size: 11.5, lh: 16, color: COLORS.texto, align: 'center',
+        x: 70.7, y: 946, w: 301.5, h: 64,
       }),
+      rectEl({ name: 'Serviço: divisória', fill: COLORS.verde, x: 385.7, y: 948, w: 1, h: 60 }),
       textEl({
         name: 'Serviço: atendimento',
-        text: '**Atendimento**\nDistribuição de 45 senhas diárias por ordem de chegada, com horário de funcionamento de 8h às 17h, de segunda a sexta.',
-        font: 'Roboto-Regular', size: 11.5, lh: 16, color: COLORS.texto, x: 410, y: 947, w: 290, h: 64,
+        text: '**Atendimento**\nDistribuição de 45 senhas diárias por ordem de chegada,\ncom horário de funcionamento de 8h às 17h,\nde segunda a sexta.',
+        font: 'Roboto-Regular', size: 11.5, lh: 16, color: COLORS.texto, align: 'center',
+        x: 400.7, y: 946, w: 301.5, h: 64,
       }),
     ],
   };

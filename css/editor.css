@@ -76,8 +76,12 @@ h4 { font-size: 13px; margin: 16px 0 6px; }
 .pageItem.cur { border-color: var(--ui-accent); background: #fff4ef; }
 .pageItem .num { font-weight: 700; color: var(--ui-accent); width: 16px; }
 .pageItem .nm { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.pageItem button { padding: 0 5px; font-size: 11px; border-color: transparent; background: transparent; }
+.pageItem button { padding: 0 3px; font-size: 11px; border-color: transparent; background: transparent; }
 .pageItem button:hover { border-color: var(--ui-border); }
+.pageItem .badge { color: var(--ui-accent); font-size: 12px; flex-shrink: 0; }
+.pageItem .nm { min-width: 28px; }
+.notice { background: #fff4ef; border: 1px solid var(--ui-accent); border-radius: 6px; padding: 8px 10px; margin: 12px 0; }
+.notice p { margin: 4px 0 8px; color: var(--ui-muted); font-size: 12px; }
 .addPage { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; margin: 10px 0; }
 .addPage span { width: 100%; color: var(--ui-muted); font-size: 12px; }
 .help { margin-top: 18px; color: var(--ui-muted); font-size: 12px; }
