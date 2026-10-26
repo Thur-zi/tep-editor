@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Editor TEP</title>
+  <link rel="stylesheet" href="css/editor.css">
+</head>
+<body>
+  <header id="toolbar">
+    <div class="brand">Editor <b>TEP</b> <span>Transformar é Possível</span></div>
+    <div class="group">
+      <button data-act="add-text" title="Adicionar caixa de texto ">＋ Texto</button>
+      <button data-act="add-image" title="Adicionar imagem do computador">＋ Imagem</button>
+      <button data-act="add-rect" title="Adicionar retângulo / faixa">＋ Retângulo</button>
+    </div>
+    <div class="group">
+      <button data-act="undo" title="Desfazer (Ctrl+Z)">↶</button>
+      <button data-act="redo" title="Refazer (Ctrl+Shift+Z)">↷</button>
+    </div>
+    <div class="group">
+      <button data-act="zoom-out" title="Diminuir zoom">−</button>
+      <button data-act="zoom-fit" id="zoomLabel" title="Ajustar à tela">100%</button>
+      <button data-act="zoom-in" title="Aumentar zoom">＋</button>
+      <label class="check" title="Mostrar margens e guias"><input type="checkbox" id="guidesToggle" checked> Margens</label>
+    </div>
+    <div class="spacer"></div>
+    <div class="group">
+      <button data-act="save-project" title="Baixar o projeto (.json) para continuar depois">Salvar projeto</button>
+      <button data-act="open-project" title="Abrir um projeto .json">Abrir</button>
+    </div>
+    <div class="group">
+      <button data-act="export-png" title="Baixar a página atual em PNG (300 dpi)">PNG</button>
+      <button data-act="export-pdf" class="primary" title="Baixar o PDF com todas as páginas">Baixar PDF</button>
+    </div>
+  </header>
+
+  <main>
+    <aside id="pagesPanel">
+      <h3>Páginas</h3>
+      <div id="pagesList"></div>
+      <div class="addPage">
+        <span>Nova página:</span>
+        <button data-act="page-materia">Matéria</button>
+        <button data-act="page-capa">Capa</button>
+        <button data-act="page-branco">Em branco</button>
+      </div>
+      <div class="help">
+        <b>Dicas</b>
+        <ul>
+          <li>Arraste para mover; puxe as bolinhas para redimensionar.</li>
+          <li><b>Duplo clique</b> no texto para editar ali mesmo.</li>
+          <li><b>Duplo clique</b> na foto para reenquadrar: arraste a foto e use a rodinha do mouse para zoom.</li>
+          <li>Cantos da foto: aumentam foto e quadro juntos. Laterais: cortam.</li>
+          <li><b>Shift</b> mantém a proporção; <b>Alt</b> desliga o encaixe nas guias.</li>
+          <li>Setas movem 1 pt (com Shift, 10 pt). Delete apaga. Ctrl+D duplica.</li>
+          <li>No texto, use <code>**assim**</code> para negrito.</li>
+          <li>Arraste uma imagem do computador direto para a página.</li>
+        </ul>
+      </div>
+    </aside>
+
+    <section id="viewport">
+      <div id="stage">
+        <div id="page"></div>
+        <div id="overlay"></div>
+      </div>
+    </section>
+
+    <aside id="panel"></aside>
+  </main>
+
+  <div id="toast"></div>
+  <div id="measure" aria-hidden="true"></div>
+  <input type="file" id="fileImage" accept="image/*" hidden>
+  <input type="file" id="fileProject" accept=".json,application/json" hidden>
+
+  <script src="js/vendor/jspdf.umd.min.js"></script>
+  <script src="js/template.js"></script>
+  <script src="js/editor.js"></script>
+  <script src="js/export.js"></script>
+</body>
+</html>
