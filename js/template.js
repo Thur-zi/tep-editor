@@ -34,6 +34,7 @@ const ASSETS = [
   { src: 'assets/foto-sorriso.jpg', name: 'Conversa com tutora', nw: 960, nh: 1708, k: 0.5 },
   { src: 'assets/foto-cumprimento.jpg', name: 'Cumprimento', nw: 960, nh: 1708, k: 0.5 },
   { src: 'assets/foto-fachada.jpg', name: 'Fachada do CASA', nw: 960, nh: 1708, k: 0.5 },
+  { src: 'assets/foto-visita-cirurgia.jpg', name: 'Visita ao centro cirúrgico', nw: 960, nh: 1708, k: 0.5 },
   { src: 'assets/anuncio-blackzap.jpg', name: 'Anúncio BlackZAP', nw: 1600, nh: 1240, k: 1 },
   { src: 'assets/cabecalho.png', name: 'Cabeçalho', nw: 2784, nh: 601, k: 1 },
 ];
@@ -69,7 +70,7 @@ function rectEl(o) {
 
 function templateCapa() {
   return {
-    id: uid(), name: 'Capa', elements: [
+    id: uid(), tid: 'capa', name: 'Capa', elements: [
       imageEl({
         name: 'Cabeçalho', src: 'assets/cabecalho.png', nw: 2784, nh: 601,
         x: 47.92, y: 88.0, w: 668.16, h: 144.24, ix: 0, iy: 0, iw: 668.16, locked: true,
@@ -140,10 +141,114 @@ function templateMateria() {
   };
 }
 
+// Pág. 3 – Causa Animal (edição Nº 107, novembro de 2026)
+function templateP3() {
+  const col = (MARGIN.r - MARGIN.l) / 3;
+  const num = (i, n, label) => [
+    textEl({ name: `Número ${i + 1}`, text: n, font: 'Roboto-Black', size: 40, lh: 44, color: COLORS.laranja,
+      align: 'center', x: MARGIN.l + col * i, y: 822, w: col, h: 44 }),
+    textEl({ name: `Legenda do número ${i + 1}`, text: label, font: 'Roboto-Regular', size: 14, lh: 18, color: COLORS.texto,
+      align: 'center', x: MARGIN.l + col * i, y: 866, w: col, h: 18 }),
+  ];
+  return {
+    id: uid(), tid: 'p3', name: 'Causa Animal', elements: [
+      rectEl({ name: 'Faixa da editoria', fill: COLORS.laranjaFaixa, x: 56.7, y: 85, w: 659, h: 40.1, locked: true }),
+      textEl({
+        name: 'Editoria', text: 'CAUSA ANIMAL', font: 'Roboto-Regular', size: 23.2, lh: 28,
+        color: COLORS.branco, align: 'center', x: 56.7, y: 92.07, w: 659, h: 28,
+      }),
+      textEl({
+        name: 'Título', text: 'Tecnologia de ponta e atendimento gratuito', font: 'Roboto-Black', size: 33, lh: 40,
+        color: COLORS.texto, align: 'center', x: 126.2, y: 150, w: 520, h: 80,
+      }),
+      textEl({
+        name: 'Linha fina', text: 'Hospital veterinário de BH é referência em cuidado animal', font: 'Roboto-Italic',
+        size: 16, lh: 20, color: COLORS.verde, align: 'center', x: 56.7, y: 236, w: 659, h: 22,
+      }),
+      textEl({
+        name: 'Texto',
+        text: 'O vereador Wanderley Porto visitou o Centro Avançado de Saúde Animal (Casa), inaugurado no Buritis, ' +
+          'no dia 2 de setembro, e conheceu de perto uma estrutura moderna, com tecnologia para exames, ' +
+          'cirurgias e tratamento de cães e gatos.',
+        font: 'Roboto-Regular', size: 11.5, lh: 16, color: COLORS.texto, align: 'justify',
+        x: 56.7, y: 278, w: 207.4, h: 115,
+      }),
+      imageEl({
+        name: 'Foto: fachada', src: 'assets/foto-fachada.jpg', nw: 960, nh: 1708, k: 0.5,
+        x: 56.7, y: 405, w: 207.4, h: 175, ix: 0, iy: -51.8, iw: 207.4,
+      }),
+      imageEl({
+        name: 'Foto: visita ao centro cirúrgico', src: 'assets/foto-visita-cirurgia.jpg', nw: 960, nh: 1708, k: 0.5,
+        x: 280, y: 278, w: 435.7, h: 302, ix: 0, iy: -181.5, iw: 435.7,
+      }),
+      // olho
+      rectEl({ name: 'Fio acima do olho', fill: COLORS.verde, x: 56.7, y: 600, w: 659, h: 1.5 }),
+      textEl({
+        name: 'Aspas de abertura', text: '“', font: 'Roboto-Black', size: 72, lh: 72, color: COLORS.laranja,
+        x: 64, y: 604, w: 50, h: 72,
+      }),
+      textEl({
+        name: 'Olho',
+        text: 'Equipamentos modernos, estrutura ampla e confortável e profissionais preparados para casos de maior ' +
+          'complexidade. Uma grande melhoria na qualidade do atendimento e, principalmente, no bem-estar dos animais. ' +
+          'É a realização de um sonho para a rede pública de proteção animal de BH.',
+        font: 'Roboto-BoldItalic', size: 18, lh: 24, color: COLORS.laranja, align: 'center',
+        x: 120, y: 616, w: 532, h: 122,
+      }),
+      textEl({
+        name: 'Aspas de fechamento', text: '”', font: 'Roboto-Black', size: 72, lh: 72, color: COLORS.laranja,
+        x: 666, y: 690, w: 50, h: 72,
+      }),
+      textEl({
+        name: 'Autor do olho', text: 'Vereador Wanderley Porto', font: 'Roboto-Regular', size: 12, lh: 16,
+        color: COLORS.verde, align: 'center', x: 120, y: 744, w: 532, h: 16,
+      }),
+      rectEl({ name: 'Fio abaixo do olho', fill: COLORS.verde, x: 56.7, y: 772, w: 659, h: 1.5 }),
+      // infográfico
+      rectEl({ name: 'Fundo do infográfico', fill: '#fdeae2', x: 56.7, y: 790, w: 659, h: 110 }),
+      textEl({
+        name: 'Título do infográfico', text: 'ATENDIMENTOS GRATUITOS REALIZADOS EM UM MÊS', font: 'Roboto-Bold',
+        size: 12, lh: 16, color: COLORS.texto, align: 'center', x: 56.7, y: 801, w: 659, h: 16,
+      }),
+      ...num(0, '934', 'atendimentos'),
+      ...num(1, '226', 'cirurgias'),
+      ...num(2, '+1.700', 'exames'),
+      rectEl({ name: 'Divisória 1', fill: COLORS.laranja, x: MARGIN.l + col - 0.5, y: 830, w: 1, h: 52 }),
+      rectEl({ name: 'Divisória 2', fill: COLORS.laranja, x: MARGIN.l + col * 2 - 0.5, y: 830, w: 1, h: 52 }),
+      // box de serviço
+      rectEl({ name: 'Box de serviço', fill: null, stroke: COLORS.verde, sw: 1.5, x: 56.7, y: 908, w: 659, h: 112.5 }),
+      textEl({
+        name: 'Serviço: título', text: 'Serviço', font: 'Roboto-Medium', size: 20, lh: 24, color: COLORS.laranja,
+        x: 72, y: 919, w: 300, h: 24,
+      }),
+      textEl({
+        name: 'Serviço: endereço',
+        text: '**Casa (Centro Avançado de Saúde Animal)**\nRua Líbero Leone, 259, Bloco Carandá 2 – Buritis\n**Telefone:** (31) 2888-0909 - ramal 2',
+        font: 'Roboto-Regular', size: 11.5, lh: 16, color: COLORS.texto, x: 72, y: 947, w: 320, h: 48,
+      }),
+      textEl({
+        name: 'Serviço: atendimento',
+        text: '**Atendimento**\nDistribuição de 45 senhas diárias por ordem de chegada, com horário de funcionamento de 8h às 17h, de segunda a sexta.',
+        font: 'Roboto-Regular', size: 11.5, lh: 16, color: COLORS.texto, x: 410, y: 947, w: 290, h: 64,
+      }),
+    ],
+  };
+}
+
 function templateBranco() {
   return { id: uid(), name: 'Página em branco', elements: [] };
 }
 
+function templateP2() {
+  const p = templateMateria();
+  p.tid = 'p2';
+  p.name = 'Pág. 2 (a definir)';
+  return p;
+}
+
+// Páginas da edição atual, na ordem. Cada uma tem um "tid" fixo: quando uma página nova entra aqui,
+// quem já usa o editor recebe essa página automaticamente, sem perder o que já editou.
 function defaultState() {
-  return { version: 1, cur: 0, pages: [templateCapa()] };
+  const pages = [templateCapa(), templateP2(), templateP3()];
+  return { version: 1, cur: 0, pages, seenTids: pages.map(p => p.tid) };
 }

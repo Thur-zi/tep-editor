@@ -106,9 +106,33 @@ function selected() { return selId ? getEl(selId) : null; }
 function loadState() {
   try {
     const s = JSON.parse(localStorage.getItem(STORAGE_KEY));
-    if (s && s.pages && s.pages.length) return s;
+    if (s && s.pages && s.pages.length) {
+      const added = addNewTemplatePages(s);
+      if (added.length) setTimeout(() => toast('Nova página no modelo: ' + added.join(', ')), 800);
+      return s;
+    }
   } catch (e) { /* sem acesso ao armazenamento */ }
   return defaultState();
+}
+
+// Insere no trabalho salvo as páginas do modelo que a pessoa ainda não recebeu.
+// Uma página recebida e depois apagada não volta (fica registrada em seenTids).
+function addNewTemplatePages(s) {
+  if (!s.seenTids) {
+    s.seenTids = [];
+    if (s.pages[0] && !s.pages[0].tid && s.pages[0].name === 'Capa') s.pages[0].tid = 'capa';
+  }
+  for (const p of s.pages) if (p.tid && !s.seenTids.includes(p.tid)) s.seenTids.push(p.tid);
+  const added = [];
+  defaultState().pages.forEach((p, i) => {
+    if (s.seenTids.includes(p.tid)) return;
+    const at = Math.min(i, s.pages.length);
+    s.pages.splice(at, 0, p);
+    if (at <= (s.cur || 0)) s.cur = (s.cur || 0) + 1;
+    s.seenTids.push(p.tid);
+    added.push(p.name);
+  });
+  return added;
 }
 
 let saveTimer = null;
@@ -1076,7 +1100,7 @@ $('#pagesList').addEventListener('click', (e) => {
   if (t.dataset.pdup) {
     const i = +t.dataset.pdup;
     const c = JSON.parse(JSON.stringify(state.pages[i]));
-    c.id = uid(); c.name += ' (cópia)';
+    c.id = uid(); c.name += ' (cópia)'; delete c.tid;
     c.elements.forEach(x => { x.id = uid(); });
     state.pages.splice(i + 1, 0, c);
     state.cur = i + 1; selId = null;
