@@ -50,6 +50,8 @@ const ASSETS = [
   { src: 'assets/saude-abraco.jpg', name: 'Hospital Célio de Castro: abraço', nw: 1200, nh: 800, k: 1 },
   { src: 'assets/saude-aplausos.jpg', name: 'Hospital Célio de Castro: aplausos', nw: 1200, nh: 800, k: 1 },
   { src: 'assets/saude-sorriso.jpg', name: 'Hospital Célio de Castro: profissional', nw: 1200, nh: 800, k: 1 },
+  { src: 'assets/dia-campanha.jpg', name: 'Campanha presidencial', nw: 720, nh: 1280, k: 1 },
+  { src: 'assets/icone-instagram.svg', name: 'Ícone do Instagram', nw: 512, nh: 512, k: 1 },
   { src: 'assets/anuncio-blackzap.jpg', name: 'Anúncio BlackZAP', nw: 1600, nh: 1240, k: 1 },
   { src: 'assets/cabecalho.png', name: 'Cabeçalho', nw: 2784, nh: 601, k: 1 },
 ];
@@ -343,16 +345,17 @@ function templateP2() {
   const xs = [MARGIN.l, (PAGE_W - S) / 2, MARGIN.r - S];
   const ys = [238.5, 485, 731.5];
   // [arquivo, largura, altura, fator de resolução, recorte quadrado na foto original (x, y, lado), legenda]
+  // Legenda null: a foto usa a legenda da linha (a visita técnica tem uma legenda só para as três fotos).
   const fotos = [
-    ['dia-comissao.jpg', 720, 1280, 1, 0, 340, 720, 'Comissão de Meio Ambiente, Defesa\ndos Animais e Política Urbana'],
-    ['dia-tribuna.jpg', 720, 1280, 1, 160, 640, 560, 'Pronunciamento no plenário\nda Câmara Municipal'],
-    ['dia-sofia-feldman.jpg', 720, 1280, 1, 72, 270, 576, 'Emendas destinadas ao\nHospital Sofia Feldman'],
-    ['dia-visita-grupo.jpg', 960, 1708, 0.5, 120, 280, 710, 'Visita técnica sobre sinalização\nnos bairros Diamante e Olaria'],
-    ['dia-visita-conversa.jpg', 960, 1708, 0.5, 150, 290, 700, 'Conversa sobre as demandas\nde trânsito da região'],
-    ['dia-visita-agente.jpg', 960, 1708, 0.5, 200, 280, 710, 'Avaliação de melhorias\nde sinalização no local'],
-    ['dia-coworking.jpg', 720, 1280, 1, 10, 190, 700, 'Encontro no Coworking Barreiro\nsobre projetos sociais'],
-    ['foto-cumprimento.jpg', 960, 1708, 0.5, 0, 0, 960, 'Visita ao Centro Avançado de\nSaúde Animal – Buritis'],
-    ['dia-demanda.jpg', 720, 1600, 1, 0, 200, 720, 'Demanda atendida pelo gabinete'],
+    ['dia-visita-grupo.jpg', 960, 1708, 0.5, 120, 280, 710, null],
+    ['dia-visita-conversa.jpg', 960, 1708, 0.5, 150, 290, 700, null],
+    ['dia-visita-agente.jpg', 960, 1708, 0.5, 200, 280, 710, null],
+    ['dia-sofia-feldman.jpg', 720, 1280, 1, 72, 270, 576, 'Apoio ao Hospital Sofia Feldman'],
+    ['dia-coworking.jpg', 720, 1280, 1, 10, 190, 700, 'Coworking Barreiro'],
+    ['dia-demanda.jpg', 720, 1600, 1, 0, 200, 720, 'Rua Aldran'],
+    ['dia-campanha.jpg', 720, 1280, 1, 0, 330, 720, 'Campanha presidencial'],
+    ['dia-comissao.jpg', 720, 1280, 1, 0, 340, 720, 'Presidindo a Comissão de Meio Ambiente,\nDefesa dos Animais e Política Urbana'],
+    ['dia-tribuna.jpg', 720, 1280, 1, 160, 640, 560, 'Plenário da Câmara Municipal de BH'],
   ];
   const tiles = [];
   fotos.forEach(([file, nw, nh, k, cx, cy, side, legenda], i) => {
@@ -361,13 +364,20 @@ function templateP2() {
       name: `Foto ${i + 1}`, src: 'assets/' + file, nw, nh, k,
       x, y, w: S, h: S, ix: -cx * f, iy: -cy * f, iw: nw * f,
     }));
-    tiles.push(textEl({
-      name: `Legenda ${i + 1}`, text: legenda, font: 'RobotoCondensed-Bold', size: 12.4, lh: 15.6,
-      color: '#ea5b27', align: 'center', x, y: y + S + 6, w: S, h: 32,
-    }));
+    if (legenda) {
+      tiles.push(textEl({
+        name: `Legenda ${i + 1}`, text: legenda, font: 'RobotoCondensed-Bold', size: 12.4, lh: 15.6,
+        color: '#ea5b27', align: 'center', x: x - 6, y: y + S + 6, w: S + 12, h: 32,
+      }));
+    }
   });
+  tiles.push(textEl({
+    name: 'Legenda da visita técnica', text: 'Visita técnica Diamante/Olaria – Avaliar melhorias na sinalização',
+    font: 'RobotoCondensed-Bold', size: 12.4, lh: 15.6, color: '#ea5b27', align: 'center',
+    x: MARGIN.l, y: ys[0] + S + 6, w: MARGIN.r - MARGIN.l, h: 16,
+  }));
   return {
-    id: uid(), tid: 'p2', tver: 3, name: 'Dia a dia em ação', elements: [
+    id: uid(), tid: 'p2', tver: 4, name: 'Dia a dia em ação', elements: [
       rectEl({ name: 'Faixa da editoria', fill: COLORS.laranjaFaixa, x: 56.7, y: 85, w: 659, h: 40.1, locked: true }),
       textEl({
         name: 'Editoria', text: 'DIA A DIA EM AÇÃO', font: 'Roboto-Regular', size: 23.2, lh: 28,
@@ -378,9 +388,14 @@ function templateP2() {
         color: COLORS.preto, align: 'center', x: 56.7, y: 162, w: 659, h: 42,
       }),
       ...tiles,
+      // rodapé: ícone do Instagram + texto, centralizados juntos
+      imageEl({
+        name: 'Ícone do Instagram', src: 'assets/icone-instagram.svg', nw: 512, nh: 512,
+        x: 171, y: 1006.4, w: 17, h: 17, ix: 0, iy: 0, iw: 17,
+      }),
       textEl({
         name: 'Rodapé', text: '@wanderleyporto Conheça mais o trabalho do vereador!', font: 'Roboto-Bold', size: 16, lh: 20,
-        color: COLORS.preto, align: 'center', x: 56.7, y: 1004.9, w: 659, h: 20,
+        color: COLORS.preto, align: 'left', x: 194, y: 1004.9, w: 412, h: 20,
       }),
     ],
   };
@@ -395,8 +410,23 @@ function legacyTemplates() {
   return [p2];
 }
 
+// JSON com as chaves em ordem alfabética: a mesma página gera sempre o mesmo texto,
+// venha ela do editor ou do banco (que reordena as chaves).
+function canon(v) {
+  if (Array.isArray(v)) return '[' + v.map(canon).join(',') + ']';
+  if (v && typeof v === 'object') {
+    return '{' + Object.keys(v).sort().filter(k => v[k] !== undefined).map(k => JSON.stringify(k) + ':' + canon(v[k])).join(',') + '}';
+  }
+  return JSON.stringify(v === undefined ? null : v);
+}
+
 // Conteúdo da página sem os identificadores, para comparar versões.
 function pageSig(p) {
+  return canon(p.elements.map(({ id, ...rest }) => rest));
+}
+
+// Assinatura no formato antigo (antes do jornal compartilhado), para reconhecer páginas salvas naquela época.
+function legacySig(p) {
   return JSON.stringify(p.elements.map(({ id, ...rest }) => rest));
 }
 
@@ -404,6 +434,7 @@ function pageSig(p) {
 // quem já usa o editor recebe essa página automaticamente, sem perder o que já editou.
 function defaultState() {
   const pages = [templateCapa(), templateP2(), templateP3(), templateP4()];
-  pages.forEach(p => { p.tsig = pageSig(p); });
+  // id fixo por página do modelo: se duas pessoas abrirem o editor ao mesmo tempo, não duplica
+  pages.forEach(p => { p.id = 'tpl-' + p.tid; p.tsig = pageSig(p); });
   return { version: 1, cur: 0, pages, seenTids: pages.map(p => p.tid) };
 }

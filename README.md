@@ -15,10 +15,21 @@ no tamanho real de impressão (772,4 × 1077,2 pt ≈ 27,2 × 38 cm).
 - **Páginas:** coluna da esquerda. Há modelos de capa, de matéria (faixa laranja, título, linha fina, texto, foto, citação) e de página em branco.
 - **Atalhos:** Ctrl+Z / Ctrl+Shift+Z, Ctrl+D duplica, Delete apaga, setas movem 1 pt (Shift = 10 pt),
   Shift mantém proporção, Alt desliga o encaixe nas guias, Ctrl + rodinha dá zoom.
-- **Salvar:** o trabalho fica salvo automaticamente neste navegador. "Salvar projeto" baixa um `.json`
-  (com as fotos enviadas) para continuar em outro computador com "Abrir".
+- **Edição compartilhada:** o jornal fica num banco de dados (Supabase) e qualquer pessoa com o link edita a
+  mesma edição. As mudanças aparecem ao vivo para todos, a barra de cima mostra quem está online e em qual página,
+  e quando duas pessoas mexem na mesma página as alterações são juntadas item por item.
+- **Segurança:** nada é apagado de verdade. Cada página guarda cópias automáticas ("Histórico desta página") e as
+  páginas apagadas podem ser recuperadas ("Páginas apagadas"). Os dois botões ficam no painel da direita, com nada selecionado.
+- **Sem internet:** o editor continua funcionando e salva só no navegador até a conexão voltar.
+- **Salvar projeto** baixa um `.json` (com as fotos) como cópia de segurança; "Abrir" substitui o jornal compartilhado.
 - **Baixar PDF:** todas as páginas, com o texto em vetor e as fontes Roboto embutidas.
   **PNG:** a página atual em 300 dpi.
+
+## Banco de dados
+
+Projeto Supabase `tep-editor` (São Paulo). Tabelas `pages` (uma linha por página), `page_history` (cópias
+automáticas, feitas por gatilho no banco) e o armazenamento `uploads` (fotos enviadas). O endereço e a chave pública
+ficam em `js/config.js`; as regras do banco permitem ver, criar e editar, mas não apagar.
 
 ## Publicar no GitHub Pages
 
@@ -30,4 +41,6 @@ Settings → Pages → *Deploy from a branch* → branch `main`, pasta `/ (root)
 - `js/template.js`: os modelos de página com as medidas do jornal.
 - `assets/`: cabeçalho, frames do vídeo do CASA e anúncio da BlackZAP.
 - `fonts/`: Roboto (Apache License 2.0), reduzida aos caracteres latinos.
+- `js/sync.js`: salvamento no banco, ao vivo, junção de alterações, histórico e presença.
 - `js/vendor/jspdf.umd.min.js`: jsPDF 2.5.1 (MIT), usado para gerar o PDF.
+- `js/vendor/supabase.min.js`: supabase-js 2.45.4 (MIT).

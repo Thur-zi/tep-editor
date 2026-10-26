@@ -44,6 +44,8 @@
       <label class="check" title="Mostrar margens e guias"><input type="checkbox" id="guidesToggle" checked> Margens</label>
     </div>
     <div class="spacer"></div>
+    <div class="group" id="presence" title="Quem está editando agora"></div>
+    <span id="syncStatus" class="sync"></span>
     <div class="group">
       <button data-act="save-project" title="Baixar o projeto (.json) para continuar depois">Salvar projeto</button>
       <button data-act="open-project" title="Abrir um projeto .json">Abrir</button>
@@ -90,12 +92,16 @@
   </main>
 
   <div id="toast"></div>
+  <div id="modal" hidden><div class="box"><button class="x" data-close title="Fechar">✕</button><div id="modalBody"></div></div></div>
   <div id="measure" aria-hidden="true"></div>
   <input type="file" id="fileImage" accept="image/*" hidden>
   <input type="file" id="fileProject" accept=".json,application/json" hidden>
 
   <script src="js/vendor/jspdf.umd.min.js"></script>
+  <script src="js/vendor/supabase.min.js"></script>
+  <script src="js/config.js"></script>
   <script src="js/template.js"></script>
+  <script src="js/sync.js"></script>
   <script src="js/editor.js"></script>
   <script src="js/export.js"></script>
 </body>

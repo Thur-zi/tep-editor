@@ -9,6 +9,7 @@ function loadImg(url) {
   if (!imgCache.has(url)) {
     imgCache.set(url, new Promise((res, rej) => {
       const im = new Image();
+      if (/^https?:/.test(url)) im.crossOrigin = 'anonymous';   // fotos do banco: permite usar no PDF/PNG
       im.onload = () => res(im);
       im.onerror = rej;
       im.src = url;
@@ -76,7 +77,7 @@ function visibleCrop(el) {
 }
 
 function isPng(url, src) {
-  return /\.png($|\?)/i.test(src || '') || /^data:image\/png/.test(url) || (src || '').startsWith('idb:') && /png/i.test((Uploads.meta[src.slice(4)] || {}).name || '');
+  return /\.(png|svg)($|\?)/i.test(src || '') || /^data:image\/png/.test(url) || (src || '').startsWith('idb:') && /png/i.test((Uploads.meta[src.slice(4)] || {}).name || '');
 }
 
 async function cropToDataURL(el) {

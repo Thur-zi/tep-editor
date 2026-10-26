@@ -49,6 +49,11 @@ const Uploads = {
     }
   },
   async add(blob, name) {
+    if (Sync.online) {
+      const src = await Sync.upload(blob, name);
+      const dims = await imageSize(URL.createObjectURL(blob));
+      return { src, w: dims.w, h: dims.h };
+    }
     const id = uid();
     const url = URL.createObjectURL(blob);
     const dims = await imageSize(url);
@@ -134,6 +139,7 @@ function useTemplateVersion() {
   const old = page();
   const fresh = templateFor(old.tid);
   if (!fresh) return;
+  fresh.id = uid();
   old.name = old.name.replace(/ \(sua versão anterior\)$/, '') + ' (sua versão anterior)';
   delete old.tid;
   state.pages.splice(state.cur, 0, fresh);
@@ -145,8 +151,10 @@ function useTemplateVersion() {
 // Página do modelo que ninguém editou: compara com a assinatura guardada (ou com versões antigas do modelo).
 function isUntouched(p) {
   const sig = pageSig(p);
-  if (p.tsig) return sig === p.tsig;
-  return legacyTemplates().some(t => t.tid === p.tid && pageSig(t) === sig);
+  if (p.tsig && (p.tsig === sig || p.tsig === legacySig(p))) return true;
+  const t = templateFor(p.tid);
+  if (t && pageSig(t) === sig) return true;
+  return legacyTemplates().some(l => l.tid === p.tid && pageSig(l) === sig);
 }
 
 // Troca, sem perguntar, as páginas do modelo que têm versão nova e não foram editadas.
@@ -154,8 +162,10 @@ function autoUpdateUntouched(s) {
   const done = [];
   s.pages.forEach((p, i) => {
     if (hasTemplateUpdate(p) && isUntouched(p)) {
-      s.pages[i] = templateFor(p.tid);
-      done.push(s.pages[i].name);
+      const t = templateFor(p.tid);
+      t.id = p.id;
+      s.pages[i] = t;
+      done.push(t.name);
     }
   });
   return done;
@@ -174,7 +184,7 @@ function addNewTemplatePages(s) {
     if (s.seenTids.includes(p.tid)) return;
     const at = Math.min(i, s.pages.length);
     s.pages.splice(at, 0, p);
-    if (at <= (s.cur || 0)) s.cur = (s.cur || 0) + 1;
+    if (s.pages.length > 1 && at <= (s.cur || 0)) s.cur = (s.cur || 0) + 1;
     s.seenTids.push(p.tid);
     added.push(p.name);
   });
@@ -183,6 +193,7 @@ function addNewTemplatePages(s) {
 
 let saveTimer = null;
 function persist() {
+  if (Sync.online) { Sync.schedule(); return; }
   clearTimeout(saveTimer);
   saveTimer = setTimeout(() => {
     try { localStorage.setItem(STORAGE_KEY, hist.last); } catch (e) { /* cheio ou bloqueado */ }
@@ -309,7 +320,10 @@ function paintNode(n, el, forExport) {
       img.alt = '';
       n.appendChild(img);
     }
-    if (img._src !== url) { img.src = url; img._src = url; }
+    if (img._src !== url) {
+      if (/^https?:/.test(url)) img.crossOrigin = 'anonymous';
+      img.src = url; img._src = url;
+    }
     img.style.left = el.ix + 'px';
     img.style.top = el.iy + 'px';
     img.style.width = el.iw + 'px';
@@ -594,6 +608,7 @@ viewport.addEventListener('pointerup', () => {
   guides = [];
   renderOverlay();
   if (moved) { commit(); renderPanel(); }
+  Sync.applyPending();
 });
 
 viewport.addEventListener('dblclick', (e) => {
@@ -742,6 +757,7 @@ function stopEditing() {
   getSelection().removeAllRanges();
   if (el) { paintNode(n, el); commit(); }
   renderOverlay(); renderPanel();
+  Sync.applyPending();
 }
 
 /* ---------- seleção e comandos ---------- */
@@ -877,6 +893,9 @@ function renderPanel() {
       <p class="muted">Clique em qualquer item da página para editar. Use a lista abaixo para pegar itens que estão por baixo de outros.</p>
       ${templateNotice()}
       <h4>Camadas (de cima para baixo)</h4>${layersHtml()}
+      ${Sync.online ? `<h4>Segurança</h4>
+      <div class="btnrow"><button data-act="page-history" title="Cópias guardadas antes de cada alteração">Histórico desta página</button>
+        <button data-act="pages-deleted">Páginas apagadas</button></div>` : ''}
       <hr><button class="danger" data-act="reset">Restaurar modelo original</button>`;
     panel.innerHTML = h;
     return;
@@ -917,10 +936,12 @@ function renderPanel() {
         <div class="btnrow"><button data-act="frame-to-image" title="Ajusta o quadro à proporção da foto">Quadro na proporção da foto</button></div>
         <p class="${dpi < 150 ? 'warn' : 'ok'}">Resolução efetiva: ${dpi} dpi ${dpi < 150 ? '— baixa para impressão (ideal: 200+)' : '— boa para impressão'}</p>`;
     }
-    const ups = Object.entries(Uploads.meta).map(([id, m]) => ({ src: 'idb:' + id, name: m.name, nw: m.w, nh: m.h, k: 1 }));
+    const ups = Sync.online
+      ? Sync.uploads.map(u => ({ src: u.src, name: u.name, nw: 0, nh: 0, k: 1 }))
+      : Object.entries(Uploads.meta).map(([id, m]) => ({ src: 'idb:' + id, name: m.name, nw: m.w, nh: m.h, k: 1 }));
     const gal = ASSETS.concat(ups).filter(a => a.src !== 'assets/cabecalho.png' || el.src === a.src);
     h += `<h4>Imagens do projeto</h4><div class="gallery">${gal.map((a, i) =>
-      `<img src="${esc(resolveSrc(a.src))}" title="${esc(a.name)}" data-gal="${i}">`).join('')}</div>`;
+      `<img src="${esc(resolveSrc(a.src))}" title="${esc(a.name)}" data-gal="${i}" loading="lazy">`).join('')}</div>`;
     panel._gallery = gal;
   } else if (el.type === 'rect') {
     h += `<h4>Aparência</h4>${colorRow('Preench.', 'fill', el.fill, true)}${colorRow('Contorno', 'stroke', el.stroke)}
@@ -1027,6 +1048,7 @@ panel.addEventListener('click', async (e) => {
   if (b.dataset.layer) { select(b.dataset.layer); return; }
   if (b.dataset.gal != null && el && el.type === 'image') {
     const a = panel._gallery[+b.dataset.gal];
+    if (!a.nw) { const d = await imageSize(resolveSrc(a.src)); a.nw = d.w; a.nh = d.h; }
     setImageSource(el, a.src, a.nw, a.nh, a.k);
     return;
   }
@@ -1091,8 +1113,12 @@ async function runAction(act) {
     case 'duplicate': duplicateSel(); break;
     case 'toggle-lock': el.locked = !el.locked; commit(); renderAll(); break;
     case 'delete': deleteSel(); break;
+    case 'page-history': Sync.showHistory(); break;
+    case 'pages-deleted': Sync.showDeleted(); break;
     case 'reset':
-      if (confirm('Voltar todas as páginas ao modelo original? O que foi feito será perdido (dá para desfazer com Ctrl+Z).')) {
+      if (confirm(Sync.online
+        ? 'Voltar TODAS as páginas ao modelo original, para todo mundo que usa o editor? As versões atuais ficam no histórico de cada página.'
+        : 'Voltar todas as páginas ao modelo original? O que foi feito será perdido (dá para desfazer com Ctrl+Z).')) {
         state = defaultState(); selId = null; commit(); renderAll(); zoomFit();
       }
       break;
@@ -1138,10 +1164,12 @@ function addPage(p) {
 function renderPagesList() {
   $('#pagesList').innerHTML = state.pages.map((p, i) => `
     <div class="pageItem ${i === state.cur ? 'cur' : ''}" data-page="${i}">
-      <span class="num">${i + 1}</span><span class="nm">${esc(p.name)}</span>${hasTemplateUpdate(p) ? '<span class="badge" title="Há uma versão nova desta página no modelo">●</span>' : ''}
+      <span class="num">${i + 1}</span><span class="nm">${esc(p.name)}</span>${hasTemplateUpdate(p) ? '<span class="badge" title="Há uma versão nova desta página no modelo">●</span>' : ''}${
+        Sync.others.filter(o => o.page === p.id).map(o => `<span class="who sm" title="${esc(o.name)} está aqui">${esc(initials(o.name))}</span>`).join('')}
       <button data-pmove="${i}:-1" title="Subir">↑</button><button data-pmove="${i}:1" title="Descer">↓</button>
       <button data-pdup="${i}" title="Duplicar página">⧉</button><button data-pdel="${i}" title="Apagar página">✕</button>
     </div>`).join('');
+  Sync.track();
 }
 
 $('#pagesList').addEventListener('click', (e) => {
@@ -1222,6 +1250,7 @@ $('#fileProject').addEventListener('change', async (e) => {
   try {
     const data = JSON.parse(await f.text());
     if (data.format !== 'tep-editor' || !data.state) throw new Error('formato');
+    if (Sync.online && !confirm('Abrir este projeto substitui o jornal compartilhado para todo mundo. As páginas atuais ficam em "Páginas apagadas". Continuar?')) return;
     const remap = {};
     for (const [id, u] of Object.entries(data.uploads || {})) {
       const blob = await (await fetch(u.data)).blob();
@@ -1258,12 +1287,25 @@ function renderAll() {
 window.addEventListener('resize', () => { if (window._autoFit) zoomFit(); });
 
 (async function init() {
-  state = loadState();
-  hist.last = JSON.stringify(state);
   await Uploads.open();
   await Uploads.loadAll();
+  const shared = await Sync.init();
+  if (shared) {
+    state = shared.state;
+    if (shared.changed.length) setTimeout(() => toast('Página nova ou atualizada no modelo: ' + shared.changed.join(', ') + '.', 6000), 800);
+  } else {
+    state = loadState();
+    Sync.setStatus('offline');
+  }
+  hist.last = JSON.stringify(state);
   await loadFonts();
   renderAll();
+  if (shared) {
+    Sync.connect();
+    Sync.schedule();                 // grava páginas novas do modelo, se houver (não espera o nome)
+    await Sync.askName();
+    Sync.offerLocalImport();
+  }
   zoomFit();
   window._autoFit = true;
   viewport.addEventListener('pointerdown', () => { window._autoFit = false; }, { once: true });
