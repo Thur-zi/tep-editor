@@ -40,9 +40,16 @@ const ASSETS = [
   { src: 'assets/dia-sofia-feldman.jpg', name: 'Hospital Sofia Feldman', nw: 720, nh: 1280, k: 1 },
   { src: 'assets/dia-visita-grupo.jpg', name: 'Visita técnica Diamante/Olaria', nw: 960, nh: 1708, k: 0.5 },
   { src: 'assets/dia-visita-moradora.jpg', name: 'Visita técnica: moradora', nw: 960, nh: 1708, k: 0.5 },
+  { src: 'assets/dia-visita-conversa.jpg', name: 'Visita técnica: conversa', nw: 960, nh: 1708, k: 0.5 },
   { src: 'assets/dia-visita-agente.jpg', name: 'Visita técnica: agente', nw: 960, nh: 1708, k: 0.5 },
   { src: 'assets/dia-coworking.jpg', name: 'Coworking Barreiro', nw: 720, nh: 1280, k: 1 },
   { src: 'assets/dia-demanda.jpg', name: 'Demanda atendida', nw: 720, nh: 1600, k: 1 },
+  { src: 'assets/saude-premiacao.jpg', name: 'Hospital Célio de Castro: premiação', nw: 1200, nh: 800, k: 1 },
+  { src: 'assets/saude-premiacao-2.jpg', name: 'Hospital Célio de Castro: premiação 2', nw: 1200, nh: 800, k: 1 },
+  { src: 'assets/saude-equipe.jpg', name: 'Hospital Célio de Castro: equipe', nw: 1200, nh: 800, k: 1 },
+  { src: 'assets/saude-abraco.jpg', name: 'Hospital Célio de Castro: abraço', nw: 1200, nh: 800, k: 1 },
+  { src: 'assets/saude-aplausos.jpg', name: 'Hospital Célio de Castro: aplausos', nw: 1200, nh: 800, k: 1 },
+  { src: 'assets/saude-sorriso.jpg', name: 'Hospital Célio de Castro: profissional', nw: 1200, nh: 800, k: 1 },
   { src: 'assets/anuncio-blackzap.jpg', name: 'Anúncio BlackZAP', nw: 1600, nh: 1240, k: 1 },
   { src: 'assets/cabecalho.png', name: 'Cabeçalho', nw: 2784, nh: 601, k: 1 },
 ];
@@ -246,6 +253,86 @@ function templateP3() {
   };
 }
 
+// Pág. 4 – Saúde (Hospital Metropolitano Dr. Célio de Castro)
+function templateP4() {
+  // foto que preenche o quadro, centralizada
+  const cover = (o) => {
+    const f = Math.max(o.w / o.nw, o.h / o.nh);
+    return imageEl(Object.assign(o, { iw: o.nw * f, ix: (o.w - o.nw * f) / 2, iy: (o.h - o.nh * f) / 2 }));
+  };
+  const premio = (i, a, b) => [
+    textEl({ name: `Prêmio ${i + 1}`, text: a, font: 'Roboto-Black', size: 36, lh: 40, color: COLORS.laranja,
+      align: 'center', x: 56.7 + i * 216, y: 664, w: 216, h: 40 }),
+    textEl({ name: `Categoria ${i + 1}`, text: b, font: 'Roboto-Regular', size: 13, lh: 16, color: COLORS.texto,
+      align: 'center', x: 56.7 + i * 216, y: 704, w: 216, h: 16 }),
+  ];
+  return {
+    id: uid(), tid: 'p4', tver: 1, name: 'Saúde', elements: [
+      rectEl({ name: 'Faixa da editoria', fill: COLORS.laranjaFaixa, x: 56.7, y: 85, w: 659, h: 40.1, locked: true }),
+      textEl({
+        name: 'Editoria', text: 'SAÚDE', font: 'Roboto-Regular', size: 23.2, lh: 28,
+        color: COLORS.branco, align: 'center', x: 56.7, y: 92.07, w: 659, h: 28,
+      }),
+      textEl({
+        name: 'Título', text: 'Hospital do Barreiro é premiado por iniciativas\nde valorização dos profissionais',
+        font: 'Roboto-Black', size: 30, lh: 36, color: COLORS.texto, align: 'center', x: 56.7, y: 150, w: 659, h: 72,
+      }),
+      textEl({
+        name: 'Linha fina', text: 'Prêmio Ser Humano reconhece projetos do Hospital Metropolitano Dr. Célio de Castro',
+        font: 'Roboto-Italic', size: 16, lh: 20, color: COLORS.verde, align: 'center', x: 56.7, y: 228, w: 659, h: 22,
+      }),
+      textEl({
+        name: 'Texto',
+        text: 'O Hospital Metropolitano Dr. Célio de Castro, no Barreiro, conquistou dois reconhecimentos no Prêmio ' +
+          'Ser Humano, promovido pela Associação Brasileira de Recursos Humanos de Minas Gerais.\n\n' +
+          'A instituição alcançou o 1º lugar na categoria Desenvolvimento e o 3º lugar em Excelência Organizacional, ' +
+          'com projetos voltados à valorização dos profissionais e ao aprimoramento da gestão hospitalar.\n\n' +
+          'As iniciativas premiadas fortalecem a confiança entre as lideranças e incentivam o acolhimento, ' +
+          'o autocuidado e o bem-estar das equipes. Cuidar de quem cuida também contribui para a qualidade ' +
+          'do atendimento à população.',
+        font: 'Roboto-Regular', size: 11.5, lh: 16, color: COLORS.texto, align: 'left',
+        x: 56.7, y: 268, w: 207.4, h: 336,
+      }),
+      cover({ name: 'Foto principal', src: 'assets/saude-premiacao.jpg', nw: 1200, nh: 800, x: 280, y: 268, w: 435.7, h: 330 }),
+      textEl({
+        name: 'Crédito das fotos', text: 'Fotos: divulgação / Hospital Metropolitano Dr. Célio de Castro',
+        font: 'Roboto-Italic', size: 8, lh: 10, color: '#77746d', align: 'right', x: 280, y: 601, w: 435.7, h: 10,
+      }),
+      // prêmios + emendas
+      rectEl({ name: 'Fundo dos prêmios', fill: '#fdeae2', x: 56.7, y: 622, w: 432, h: 110 }),
+      textEl({
+        name: 'Título dos prêmios', text: 'PRÊMIO SER HUMANO · ABRH-MG', font: 'Roboto-Bold', size: 12, lh: 16,
+        color: COLORS.texto, align: 'center', x: 56.7, y: 634, w: 432, h: 16,
+      }),
+      ...premio(0, '1º lugar', 'Desenvolvimento'),
+      ...premio(1, '3º lugar', 'Excelência Organizacional'),
+      rectEl({ name: 'Divisória dos prêmios', fill: COLORS.laranja, x: 272.2, y: 664, w: 1, h: 52 }),
+      rectEl({ name: 'Fundo das emendas', fill: COLORS.verde, x: 503.7, y: 622, w: 212, h: 110 }),
+      textEl({
+        name: 'Emendas: valor', text: '+ de R$\u00a01,2 milhão', font: 'Roboto-Black', size: 22, lh: 26, color: COLORS.branco,
+        align: 'center', x: 503.7, y: 646, w: 212, h: 26,
+      }),
+      textEl({
+        name: 'Emendas: legenda', text: 'em emendas do vereador\nWanderley Porto para o hospital', font: 'Roboto-Regular',
+        size: 12.5, lh: 16, color: COLORS.branco, align: 'center', x: 503.7, y: 678, w: 212, h: 32,
+      }),
+      // citação + foto da equipe
+      textEl({
+        name: 'Citação',
+        text: '“Tenho uma grande satisfação em apoiar o Hospital com a destinação de recursos. Já destinei mais de ' +
+          'R$\u00a01,2 milhão em emendas parlamentares para fortalecer o atendimento.”',
+        font: 'Roboto-Bold', size: 15, lh: 21, color: COLORS.branco, bg: COLORS.verde, align: 'center',
+        x: 56.7, y: 752, w: 300, h: 268.5, padT: 62, padR: 22, padB: 18, padL: 22,
+      }),
+      textEl({
+        name: 'Autor da citação', text: 'Vereador Wanderley Porto', font: 'Roboto-Regular', size: 11, lh: 14,
+        color: COLORS.branco, align: 'center', x: 56.7, y: 958, w: 300, h: 14,
+      }),
+      cover({ name: 'Foto da equipe', src: 'assets/saude-equipe.jpg', nw: 1200, nh: 800, x: 372, y: 752, w: 343.7, h: 268.5 }),
+    ],
+  };
+}
+
 function templateBranco() {
   return { id: uid(), name: 'Página em branco', elements: [] };
 }
@@ -259,12 +346,12 @@ function templateP2() {
   const fotos = [
     ['dia-comissao.jpg', 720, 1280, 1, 0, 340, 720, 'Comissão de Meio Ambiente, Defesa\ndos Animais e Política Urbana'],
     ['dia-tribuna.jpg', 720, 1280, 1, 160, 640, 560, 'Pronunciamento no plenário\nda Câmara Municipal'],
-    ['dia-sofia-feldman.jpg', 720, 1280, 1, 72, 370, 576, 'Emendas destinadas ao\nHospital Sofia Feldman'],
+    ['dia-sofia-feldman.jpg', 720, 1280, 1, 72, 270, 576, 'Emendas destinadas ao\nHospital Sofia Feldman'],
     ['dia-visita-grupo.jpg', 960, 1708, 0.5, 120, 280, 710, 'Visita técnica sobre sinalização\nnos bairros Diamante e Olaria'],
-    ['dia-visita-moradora.jpg', 960, 1708, 0.5, 150, 280, 710, 'Conversa com moradores\ndo Diamante e do Olaria'],
+    ['dia-visita-conversa.jpg', 960, 1708, 0.5, 150, 290, 700, 'Conversa sobre as demandas\nde trânsito da região'],
     ['dia-visita-agente.jpg', 960, 1708, 0.5, 200, 280, 710, 'Avaliação de melhorias\nde sinalização no local'],
     ['dia-coworking.jpg', 720, 1280, 1, 10, 190, 700, 'Encontro no Coworking Barreiro\nsobre projetos sociais'],
-    ['foto-cumprimento.jpg', 960, 1708, 0.5, 0, 40, 960, 'Visita ao Centro Avançado de\nSaúde Animal – Buritis'],
+    ['foto-cumprimento.jpg', 960, 1708, 0.5, 0, 0, 960, 'Visita ao Centro Avançado de\nSaúde Animal – Buritis'],
     ['dia-demanda.jpg', 720, 1600, 1, 0, 200, 720, 'Demanda atendida pelo gabinete'],
   ];
   const tiles = [];
@@ -280,7 +367,7 @@ function templateP2() {
     }));
   });
   return {
-    id: uid(), tid: 'p2', tver: 2, name: 'Dia a dia em ação', elements: [
+    id: uid(), tid: 'p2', tver: 3, name: 'Dia a dia em ação', elements: [
       rectEl({ name: 'Faixa da editoria', fill: COLORS.laranjaFaixa, x: 56.7, y: 85, w: 659, h: 40.1, locked: true }),
       textEl({
         name: 'Editoria', text: 'DIA A DIA EM AÇÃO', font: 'Roboto-Regular', size: 23.2, lh: 28,
@@ -316,7 +403,7 @@ function pageSig(p) {
 // Páginas da edição atual, na ordem. Cada uma tem um "tid" fixo: quando uma página nova entra aqui,
 // quem já usa o editor recebe essa página automaticamente, sem perder o que já editou.
 function defaultState() {
-  const pages = [templateCapa(), templateP2(), templateP3()];
+  const pages = [templateCapa(), templateP2(), templateP3(), templateP4()];
   pages.forEach(p => { p.tsig = pageSig(p); });
   return { version: 1, cur: 0, pages, seenTids: pages.map(p => p.tid) };
 }
