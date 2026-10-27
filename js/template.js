@@ -605,45 +605,56 @@ function templateP8() {
   const label = (name, text, y) => textEl({ name, text, font: 'Roboto-Bold', size: 13, lh: 16, color: COLORS.laranja,
     x: 56.7, y, w: W, h: 16 });
   return {
-    id: uid(), tid: 'p8', tver: 3, name: '19 de novembro', elements: [
+    id: uid(), tid: 'p8', tver: 4, name: '19 de novembro', elements: [
       rectEl({ name: 'Faixa da editoria', fill: COLORS.laranjaFaixa, x: 56.7, y: 85, w: 659, h: 40.1, locked: true }),
       textEl({
         name: 'Editoria', text: '19 DE NOVEMBRO', font: 'Roboto-Regular', size: 23.2, lh: 28,
         color: COLORS.branco, align: 'center', x: 56.7, y: 92.07, w: 659, h: 28,
       }),
-      // dia da bandeira: foto do Wanderley com a bandeira, em destaque
-      textEl({ name: 'Bandeira: data', text: 'DIA DA BANDEIRA', font: 'Roboto-Bold', size: 13, lh: 16,
-        color: COLORS.laranja, x: 56.7, y: 140, w: W, h: 16 }),
+      // dia da bandeira: foto do Wanderley com a bandeira, em destaque (selo da data sobre a foto)
       imageEl({
         name: 'Foto: Wanderley com a bandeira', src: 'assets/bandeira-wanderley.jpg', nw: 2000, nh: 2000,
-        x: 56.7, y: 160, w: W, h: 256, ix: 0, iy: -46.42, iw: W,
+        x: 56.7, y: 140, w: W, h: 226, ix: 0, iy: -47.5, iw: W,
       }),
+      rectEl({ name: 'Bandeira: selo', fill: COLORS.laranja, x: 56.7, y: 152, w: 132, h: 24 }),
+      textEl({ name: 'Bandeira: data', text: 'DIA DA BANDEIRA', font: 'Roboto-Bold', size: 12, lh: 15,
+        color: COLORS.branco, align: 'center', x: 56.7, y: 157, w: 132, h: 15 }),
       textEl({
         name: 'Bandeira: título', text: 'Orgulho de ser brasileiro.\nCompromisso com o nosso Brasil!', font: 'Roboto-Black',
-        size: 18, lh: 22, color: COLORS.texto, x: 56.7, y: 422, w: W, h: 44,
+        size: 18, lh: 22, color: COLORS.texto, x: 56.7, y: 380, w: W, h: 44,
       }),
       textEl({
-        name: 'Bandeira: texto',
-        text: 'A bandeira representa nossa pátria, nossa história e nossos valores.\n' +
-          'Amar o Brasil é defender a liberdade, valorizar a família, respeitar nossos símbolos e trabalhar por um ' +
-          'país com mais segurança, oportunidades e dignidade para todos.\n**Deus, Pátria e Família: valores que nos ' +
-          'inspiram a construir um Brasil melhor!**',
-        font: 'Roboto-Regular', size: 11.5, lh: 16, color: COLORS.texto, x: 56.7, y: 470, w: W, h: 64,
+        name: 'Bandeira: texto 1', text: 'A bandeira representa nossa pátria, nossa história e nossos valores.',
+        font: 'Roboto-Regular', size: 11.5, lh: 16, color: COLORS.texto, x: 56.7, y: 432, w: W, h: 16,
+      }),
+      textEl({
+        name: 'Bandeira: texto 2',
+        text: 'Amar o Brasil é defender a liberdade, valorizar a família, respeitar nossos símbolos e trabalhar por um ' +
+          'país com mais segurança, oportunidades e dignidade para todos.',
+        font: 'Roboto-Regular', size: 11.5, lh: 16, color: COLORS.texto, x: 56.7, y: 454, w: W, h: 32,
+      }),
+      textEl({
+        name: 'Bandeira: fecho', text: 'Deus, Pátria e Família: valores que nos inspiram a construir um Brasil melhor!',
+        font: 'Roboto-Bold', size: 11.5, lh: 16, color: COLORS.verde, x: 56.7, y: 492, w: W, h: 16,
       }),
       // empreendedorismo feminino: box com fundo colorido
-      rectEl({ name: 'Empreendedorismo: fundo', fill: COLORS.laranja, x: 56.7, y: 542, w: W, h: 116 }),
-      textEl({ name: 'Empreendedorismo: data', text: 'DIA DO EMPREENDEDORISMO FEMININO', font: 'Roboto-Bold', size: 11.5, lh: 14,
-        color: '#ffe3d6', x: 70, y: 552, w: 405, h: 14 }),
+      rectEl({ name: 'Empreendedorismo: fundo', fill: COLORS.laranja, x: 56.7, y: 524, w: W, h: 136 }),
+      textEl({ name: 'Empreendedorismo: data', text: 'DIA DO EMPREENDEDORISMO FEMININO', font: 'Roboto-Bold', size: 11, lh: 14,
+        color: '#ffe3d6', x: 72, y: 538, w: 401, h: 14 }),
       textEl({
         name: 'Empreendedorismo: título', text: 'Elas empreendem, geram renda e transformam vidas!', font: 'Roboto-Black',
-        size: 16, lh: 20, color: COLORS.branco, x: 70, y: 568, w: 405, h: 20,
+        size: 16, lh: 20, color: COLORS.branco, x: 72, y: 556, w: 401, h: 20,
       }),
       textEl({
         name: 'Empreendedorismo: texto',
         text: 'À frente de muitos negócios, existem mulheres que enfrentam desafios, movimentam a economia, geram ' +
-          'oportunidades e correm atrás dos seus sonhos.\n**Valorizar essas mulheres é reconhecer a força de quem faz ' +
-          'acontecer todos os dias!**',
-        font: 'Roboto-Regular', size: 11, lh: 15, color: COLORS.branco, x: 70, y: 592, w: 405, h: 60,
+          'oportunidades e correm atrás dos seus sonhos.',
+        font: 'Roboto-Regular', size: 11, lh: 14.5, color: COLORS.branco, x: 72, y: 586, w: 401, h: 29,
+      }),
+      textEl({
+        name: 'Empreendedorismo: fecho',
+        text: 'Valorizar essas mulheres é reconhecer a força de quem faz acontecer todos os dias!',
+        font: 'Roboto-Bold', size: 11, lh: 14.5, color: COLORS.branco, x: 72, y: 621, w: 401, h: 29,
       }),
       // anúncios e rodapé: os mesmos da edição de outubro
       imageEl({
