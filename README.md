@@ -27,6 +27,7 @@ no tamanho real de impressão (772,4 × 1077,2 pt ≈ 27,2 × 38 cm).
 - **Colar página da IA:** funciona com qualquer IA de chat (Claude, ChatGPT, Gemini, Copilot, inclusive nos planos
   grátis). Clique no botão, copie as instruções, cole na IA e depois cole a resposta dela de volta. A página entra como página nova.
 - **Baixar PDF:** todas as páginas, com o texto em vetor e as fontes Roboto embutidas.
+  **Versão web:** o mesmo PDF, leve para publicar no site (fotos reduzidas a 120 dpi).
   **PNG:** a página atual em 300 dpi.
 
 ## Editar pelo Codex (ou outro agente)

@@ -1129,6 +1129,7 @@ async function runAction(act) {
     case 'save-project': await saveProject(); break;
     case 'open-project': $('#fileProject').click(); break;
     case 'export-pdf': await exportPDF(); break;
+    case 'export-web': await exportPDF(true); break;
     case 'export-png': await exportPNG(); break;
   }
 }

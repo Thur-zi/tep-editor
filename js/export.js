@@ -3,6 +3,9 @@
 'use strict';
 
 const PNG_DPI = 300;
+// Versão web (para o site): mesmas páginas, fotos reduzidas a ~120 dpi e mais compactadas, como a "web" de outubro.
+const WEB_DPI = 120;
+const WEB_QUALITY = 0.8;
 
 const imgCache = new Map();
 function loadImg(url) {
@@ -81,21 +84,26 @@ function isPng(url, src) {
   return /\.(png|svg)($|\?)/i.test(src || '') || /^data:image\/png/.test(url) || (src || '').startsWith('idb:') && /png/i.test((Uploads.meta[src.slice(4)] || {}).name || '');
 }
 
-async function cropToDataURL(el) {
+async function cropToDataURL(el, web) {
   const url = resolveSrc(el.src);
   const c = visibleCrop(el);
   if (!url || !c) return null;
   const im = await loadImg(url);
   // a imagem carregada pode ter tamanho diferente do registrado; ajusta a escala
   const kx = im.naturalWidth / el.nw, ky = im.naturalHeight / el.nh;
-  const sw = Math.max(1, Math.round(c.sw * kx)), sh = Math.max(1, Math.round(c.sh * ky));
+  let sw = Math.max(1, Math.round(c.sw * kx)), sh = Math.max(1, Math.round(c.sh * ky));
+  if (web) {   // nunca mais que WEB_DPI no tamanho em que a foto aparece na página
+    const f = Math.min(1, (c.dw / 72 * WEB_DPI) / sw);
+    sw = Math.max(1, Math.round(sw * f)); sh = Math.max(1, Math.round(sh * f));
+  }
   const cv = document.createElement('canvas');
   cv.width = sw; cv.height = sh;
   const ctx = cv.getContext('2d');
-  const png = isPng(url, el.src);
+  const png = isPng(url, el.src) && !web;   // na versão web tudo vira JPEG (fundo branco)
   if (!png) { ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, sw, sh); }
+  ctx.imageSmoothingQuality = 'high';
   ctx.drawImage(im, c.sx * kx, c.sy * ky, c.sw * kx, c.sh * ky, 0, 0, sw, sh);
-  return { data: cv.toDataURL(png ? 'image/png' : 'image/jpeg', 0.93), fmt: png ? 'PNG' : 'JPEG', c };
+  return { data: cv.toDataURL(png ? 'image/png' : 'image/jpeg', web ? WEB_QUALITY : 0.93), fmt: png ? 'PNG' : 'JPEG', c };
 }
 
 async function fontBase64(key) {
@@ -106,9 +114,9 @@ async function fontBase64(key) {
   return btoa(s);
 }
 
-async function exportPDF() {
+async function exportPDF(web) {
   if (editingId) stopEditing();
-  toast('Gerando o PDF…', 60000);
+  toast(web ? 'Gerando a versão web…' : 'Gerando o PDF…', 60000);
   try {
     const { jsPDF } = window.jspdf;
     const pdf = new jsPDF({ unit: 'pt', format: [PAGE_W, PAGE_H], orientation: 'portrait', compress: true, putOnlyUsedFonts: true });
@@ -138,7 +146,7 @@ async function exportPDF() {
             pdf.rect(el.x + sw / 2, el.y + sw / 2, el.w - sw, el.h - sw, 'S');
           }
         } else if (el.type === 'image') {
-          const r = await cropToDataURL(el);
+          const r = await cropToDataURL(el, web);
           if (r) pdf.addImage(r.data, r.fmt, r.c.dx, r.c.dy, r.c.dw, r.c.dh, undefined, 'FAST');
         } else if (el.type === 'text') {
           if (el.bg) { pdf.setFillColor(el.bg); pdf.rect(el.x, el.y, el.w, el.h, 'F'); }
@@ -152,7 +160,9 @@ async function exportPDF() {
         if (op < 1) pdf.setGState(new pdf.GState({ opacity: 1, 'stroke-opacity': 1 }));
       }
     }
-    download(pdf.output('blob'), `${fileTag()}_${stamp()}.pdf`);
+    const blob = pdf.output('blob');
+    download(blob, `${fileTag()}${web ? '_web' : ''}_${stamp()}.pdf`);
+    if (web) { toast(`Versão web pronta (${(blob.size / 1048576).toFixed(1).replace('.', ',')} MB). Confira a pasta de downloads.`, 5000); return; }
     toast('PDF pronto! Confira a pasta de downloads.');
   } catch (err) {
     console.error(err);
