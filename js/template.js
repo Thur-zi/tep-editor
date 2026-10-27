@@ -50,6 +50,7 @@ const ASSETS = [
   { src: 'assets/saude-abraco.jpg', name: 'Hospital Célio de Castro: abraço', nw: 1200, nh: 800, k: 1 },
   { src: 'assets/saude-aplausos.jpg', name: 'Hospital Célio de Castro: aplausos', nw: 1200, nh: 800, k: 1 },
   { src: 'assets/saude-sorriso.jpg', name: 'Hospital Célio de Castro: profissional', nw: 1200, nh: 800, k: 1 },
+  { src: 'assets/dia-evento-criancas.jpg', name: 'Evento para as crianças no Diamante', nw: 960, nh: 1708, k: 0.5 },
   { src: 'assets/dia-campanha.jpg', name: 'Campanha presidencial', nw: 720, nh: 1280, k: 1 },
   { src: 'assets/icone-instagram.svg', name: 'Ícone do Instagram', nw: 512, nh: 512, k: 1 },
   { src: 'assets/anuncio-blackzap.jpg', name: 'Anúncio BlackZAP', nw: 1600, nh: 1240, k: 1 },
@@ -349,7 +350,7 @@ function templateP2() {
   const fotos = [
     ['dia-visita-grupo.jpg', 960, 1708, 0.5, 120, 280, 710, null],
     ['dia-visita-conversa.jpg', 960, 1708, 0.5, 150, 290, 700, null],
-    ['dia-visita-agente.jpg', 960, 1708, 0.5, 200, 280, 710, null],
+    ['dia-evento-criancas.jpg', 960, 1708, 0.5, 0, 400, 960, 'Evento para as crianças no Diamante'],
     ['dia-sofia-feldman.jpg', 720, 1280, 1, 72, 270, 576, 'Apoio ao Hospital Sofia Feldman'],
     ['dia-coworking.jpg', 720, 1280, 1, 10, 190, 700, 'Coworking Barreiro'],
     ['dia-demanda.jpg', 720, 1600, 1, 0, 200, 720, 'Rua Aldran'],
@@ -374,10 +375,10 @@ function templateP2() {
   tiles.push(textEl({
     name: 'Legenda da visita técnica', text: 'Visita técnica Diamante/Olaria – Avaliar melhorias na sinalização',
     font: 'RobotoCondensed-Bold', size: 12.4, lh: 15.6, color: '#ea5b27', align: 'center',
-    x: MARGIN.l, y: ys[0] + S + 6, w: MARGIN.r - MARGIN.l, h: 16,
+    x: MARGIN.l, y: ys[0] + S + 6, w: xs[1] + S - MARGIN.l, h: 16,
   }));
   return {
-    id: uid(), tid: 'p2', tver: 4, name: 'Dia a dia em ação', elements: [
+    id: uid(), tid: 'p2', tver: 5, name: 'Dia a dia em ação', elements: [
       rectEl({ name: 'Faixa da editoria', fill: COLORS.laranjaFaixa, x: 56.7, y: 85, w: 659, h: 40.1, locked: true }),
       textEl({
         name: 'Editoria', text: 'DIA A DIA EM AÇÃO', font: 'Roboto-Regular', size: 23.2, lh: 28,
