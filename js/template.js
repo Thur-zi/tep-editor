@@ -57,6 +57,7 @@ const ASSETS = [
   { src: 'assets/tirol-wanderley.jpg', name: 'Tirol: Wanderley na obra', nw: 720, nh: 1280, k: 1 },
   { src: 'assets/tirol-asfalto.jpg', name: 'Tirol: Rua Júlio Mesquita', nw: 720, nh: 1280, k: 1 },
   { src: 'assets/tirol-canteiro.jpg', name: 'Tirol: canteiro da avenida', nw: 720, nh: 1280, k: 1 },
+  { src: 'assets/qr-whatsapp.svg', name: 'QR code do WhatsApp (31) 98282-6850', nw: 1024, nh: 1024, k: 1 },
   { src: 'assets/anuncio-blackzap.jpg', name: 'Anúncio BlackZAP', nw: 1600, nh: 1240, k: 1 },
   { src: 'assets/cabecalho.png', name: 'Cabeçalho', nw: 2784, nh: 601, k: 1 },
 ];
@@ -433,8 +434,8 @@ function templateP6() {
           align: 'center', x, y: 338, w: tileW, h: 19 }),
       ];
     });
-  // gráfico: uma escala só (quantidade), 0 a 40, 11 pt por unidade
-  const base = 905, unit = 11, x0 = 96, x1 = MARGIN.r, gw = (x1 - x0) / meses.length, bw = 30;
+  // gráfico: uma escala só (quantidade), 0 a 40, 7,5 pt por unidade
+  const base = 762, unit = 7.5, x0 = 96, x1 = MARGIN.r, gw = (x1 - x0) / meses.length, bw = 30;
   const chart = [];
   for (const v of [10, 20, 30, 40]) {
     chart.push(rectEl({ name: `Grade ${v}`, fill: '#e6e5e0', x: x0, y: base - v * unit, w: x1 - x0, h: 0.75 }));
@@ -453,7 +454,7 @@ function templateP6() {
   });
   chart.push(rectEl({ name: 'Linha de base', fill: COLORS.texto, x: x0, y: base, w: x1 - x0, h: 1 }));
   return {
-    id: uid(), tid: 'p6', tver: 1, name: 'Atendimentos', elements: [
+    id: uid(), tid: 'p6', tver: 2, name: 'Atendimentos', elements: [
       rectEl({ name: 'Faixa da editoria', fill: COLORS.laranjaFaixa, x: 56.7, y: 85, w: 659, h: 40.1, locked: true }),
       textEl({
         name: 'Editoria', text: 'ATENDIMENTOS', font: 'Roboto-Regular', size: 23.2, lh: 28,
@@ -486,14 +487,29 @@ function templateP6() {
       textEl({ name: 'Legenda: visitas', text: 'Visitas técnicas', font: 'Roboto-Regular', size: 13, lh: 16, color: COLORS.texto,
         x: 578, y: 428.5, w: 137.7, h: 16 }),
       ...chart,
-      rectEl({ name: 'Rodapé: fio', fill: COLORS.verde, x: 56.7, y: 948, w: 659, h: 1.5 }),
       textEl({
-        name: 'Rodapé: total', text: 'No período: **206 ofícios** e **54 visitas técnicas**',
-        font: 'Roboto-Regular', size: 15, lh: 19, color: COLORS.texto, align: 'center', x: 56.7, y: 962, w: 659, h: 19,
+        name: 'Fonte', text: 'Fonte: gabinete do vereador Wanderley Porto. Visitas técnicas realizadas entre 26/02 e 31/07.',
+        font: 'Roboto-Italic', size: 10, lh: 12, color: '#77746d', align: 'right', x: 56.7, y: 792, w: 659, h: 12,
+      }),
+      // destaque: fale com a equipe pelo WhatsApp
+      rectEl({ name: 'WhatsApp: fundo', fill: COLORS.laranja, x: 56.7, y: 814, w: 659, h: 206.5 }),
+      rectEl({ name: 'WhatsApp: moldura do QR', fill: COLORS.branco, x: 74.7, y: 829, w: 176.5, h: 176.5 }),
+      imageEl({
+        name: 'QR code do WhatsApp', src: 'assets/qr-whatsapp.svg', nw: 1024, nh: 1024,
+        x: 78.7, y: 833, w: 168.5, h: 168.5, ix: 0, iy: 0, iw: 168.5,
       }),
       textEl({
-        name: 'Rodapé: fonte', text: 'Fonte: gabinete do vereador Wanderley Porto. Visitas técnicas realizadas entre 26/02 e 31/07.',
-        font: 'Roboto-Italic', size: 10, lh: 12, color: '#77746d', align: 'center', x: 56.7, y: 990, w: 659, h: 12,
+        name: 'WhatsApp: chamada', text: 'Fale com a nossa equipe!', font: 'Roboto-Black', size: 30, lh: 36,
+        color: COLORS.branco, x: 272, y: 842, w: 430, h: 36,
+      }),
+      textEl({
+        name: 'WhatsApp: número', text: '(31) 98282-6850', font: 'Roboto-Black', size: 44, lh: 50,
+        color: COLORS.branco, x: 272, y: 882, w: 430, h: 50,
+      }),
+      textEl({
+        name: 'WhatsApp: instrução',
+        text: 'Aponte a câmera do celular para o QR code\ne mande sua mensagem pelo WhatsApp.',
+        font: 'Roboto-Bold', size: 15, lh: 20, color: COLORS.branco, x: 272, y: 944, w: 430, h: 40,
       }),
     ],
   };
