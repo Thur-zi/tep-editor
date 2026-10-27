@@ -528,14 +528,14 @@ function templateP7() {
   const lista = [];
   let y = 640;
   itens.forEach(([t, h], i) => {
-    lista.push(textEl({ name: `Atenção ${i + 1}: marcador`, text: '•', font: 'Roboto-Black', size: 22, lh: 21, color: AZUL,
-      x: 82, y: y - 1, w: 14, h: 21 }));
+    lista.push(imageEl({ name: `Atenção ${i + 1}: marcador`, src: 'assets/laco-novembro-azul.svg', nw: 1024, nh: 1024,
+      x: 78, y: y - 1, w: 22, h: 22, ix: 0, iy: 0, iw: 22 }));
     lista.push(textEl({ name: `Atenção ${i + 1}`, text: t, font: 'Roboto-Regular', size: 15, lh: 21, color: COLORS.texto,
-      x: 100, y, w: 595, h }));
+      x: 108, y, w: 587, h }));
     y += h + 12;
   });
   return {
-    id: uid(), tid: 'p7', tver: 1, name: 'Novembro Azul', elements: [
+    id: uid(), tid: 'p7', tver: 2, name: 'Novembro Azul', elements: [
       rectEl({ name: 'Faixa da editoria', fill: COLORS.laranjaFaixa, x: 56.7, y: 85, w: 659, h: 40.1, locked: true }),
       textEl({
         name: 'Editoria', text: 'NOVEMBRO AZUL', font: 'Roboto-Regular', size: 23.2, lh: 28,
