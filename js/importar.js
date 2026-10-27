@@ -1,13 +1,14 @@
-// "Colar página do Claude": transforma o texto gerado por um Claude (no chat comum) em uma página nova do jornal.
+// "Colar página da IA": transforma o texto gerado por uma IA de chat (Claude, ChatGPT, Gemini, Copilot...)
+// em uma página nova do jornal.
 // Não apaga nada: a página entra logo depois da página aberta.
 'use strict';
 
 const FIT_MODES = ['cover', 'contain'];
 
-function promptParaClaude() {
+function promptParaIA() {
   const fontes = Object.keys(FONTS).join(', ');
   const galeria = ASSETS.filter(a => a.src !== 'assets/cabecalho.png').map(a => `- "${a.name}"`).join('\n');
-  return `Você vai me ajudar a montar páginas do jornal mensal impresso "Transformar é Possível" (TEP), do vereador Wanderley Porto, de Belo Horizonte. Eu monto as páginas num editor visual; você me devolve cada página como um bloco JSON que eu colo no botão "Colar página do Claude" do editor.
+  return `Você vai me ajudar a montar páginas do jornal mensal impresso "Transformar é Possível" (TEP), do vereador Wanderley Porto, de Belo Horizonte. Eu monto as páginas num editor visual; você me devolve cada página como um bloco JSON que eu colo no botão "Colar página da IA" do editor.
 
 COMO RESPONDER
 - Quando eu pedir uma página, responda com UM bloco de código \`\`\`json contendo a página, e depois, fora do bloco, no máximo 3 linhas explicando o que fez.
@@ -58,14 +59,21 @@ ${galeria}
 Confirme que entendeu em uma frase e espere eu mandar o conteúdo da primeira página.`;
 }
 
-// Tira o JSON de dentro do texto colado (aceita o bloco ```json, texto antes/depois, uma página ou {"pages":[...]})
+// Tira o JSON de dentro do texto colado. Aceita a mensagem inteira da IA, um ou vários blocos ```json,
+// comentários // nas linhas, aspas curvas e vírgula sobrando no fim de listas.
 function extrairJSON(texto) {
-  const bloco = texto.match(/```(?:json)?\s*([\s\S]*?)```/i);
-  let t = bloco ? bloco[1] : texto;
-  const i = t.indexOf('{'), j = t.lastIndexOf('}');
-  if (i < 0 || j < i) throw new Error('não encontrei nenhum bloco { ... } no texto colado');
-  t = t.slice(i, j + 1).replace(/[“”]/g, '"').replace(/,\s*([}\]])/g, '$1');
-  return JSON.parse(t);
+  const blocos = [...texto.matchAll(/```[a-zA-Z]*\s*([\s\S]*?)```/g)].map(m => m[1]).filter(b => b.includes('{'));
+  const partes = (blocos.length ? blocos : [texto]).map(t => {
+    const i = t.indexOf('{'), i2 = t.indexOf('['), j = Math.max(t.lastIndexOf('}'), t.lastIndexOf(']'));
+    const ini = i2 >= 0 && i2 < i ? i2 : i;
+    if (ini < 0 || j < ini) throw new Error('não encontrei nenhum bloco { ... } no texto colado');
+    t = t.slice(ini, j + 1)
+      .replace(/^\s*\/\/.*$/gm, '')
+      .replace(/[“”]/g, '"')
+      .replace(/,\s*([}\]])/g, '$1');
+    return JSON.parse(t);
+  });
+  return partes.length === 1 ? partes[0] : { pages: partes.flatMap(p => Array.isArray(p) ? p : p.pages || [p]) };
 }
 
 function numero(v, padrao) {
@@ -136,25 +144,25 @@ function paginasDoJSON(dados, avisos) {
     if (!p || !Array.isArray(p.elements)) throw new Error(`a página ${n + 1} não tem a lista "elements"`);
     return {
       id: uid(),
-      name: String(p.name || 'Página do Claude').slice(0, 60),
+      name: String(p.name || 'Página da IA').slice(0, 60),
       elements: p.elements.map(o => normalizarElemento(o || {}, avisos)).filter(Boolean),
     };
   });
 }
 
 function abrirColar() {
-  openModal(`<h3>Colar página do Claude</h3>
-    <p class="muted">Cole aqui a resposta do Claude (pode ser a mensagem inteira). A página entra logo depois da página aberta, sem apagar nada.</p>
+  openModal(`<h3>Colar página da IA</h3>
+    <p class="muted">Cole aqui a resposta da IA — Claude, ChatGPT, Gemini, Copilot ou outra (pode ser a mensagem inteira). A página entra logo depois da página aberta, sem apagar nada.</p>
     <textarea id="colarTexto" style="min-height:220px;font-family:ui-monospace,monospace;font-size:12px" placeholder='{ "name": "...", "elements": [ ... ] }'></textarea>
     <p id="colarErro" class="warn"></p>
     <div class="btnrow"><button class="primary" id="colarOk">Adicionar ao jornal</button></div>
     <hr>
-    <p class="muted">Primeira vez? Copie as instruções e cole no começo de uma conversa nova com o Claude.</p>
-    <div class="btnrow"><button id="colarPrompt">Copiar instruções para o Claude</button></div>`);
+    <p class="muted">Primeira vez? Copie as instruções e cole no começo de uma conversa nova com a IA.</p>
+    <div class="btnrow"><button id="colarPrompt">Copiar instruções para a IA</button></div>`);
   document.getElementById('colarTexto').focus();
   document.getElementById('colarPrompt').onclick = async () => {
-    const t = promptParaClaude();
-    try { await navigator.clipboard.writeText(t); toast('Instruções copiadas. Cole no Claude.'); }
+    const t = promptParaIA();
+    try { await navigator.clipboard.writeText(t); toast('Instruções copiadas. Cole na conversa com a IA.'); }
     catch (e) { document.getElementById('colarTexto').value = t; toast('Não consegui copiar sozinho: as instruções estão na caixa, copie com Ctrl+C.', 5000); }
   };
   document.getElementById('colarOk').onclick = () => {
@@ -164,7 +172,7 @@ function abrirColar() {
     try {
       paginas = paginasDoJSON(extrairJSON(document.getElementById('colarTexto').value), avisos);
     } catch (e) {
-      erro.textContent = 'Não consegui ler: ' + e.message + '. Peça ao Claude para mandar só o bloco JSON.';
+      erro.textContent = 'Não consegui ler: ' + e.message + '. Peça à IA para mandar só o bloco JSON.';
       return;
     }
     if (editingId) stopEditing();

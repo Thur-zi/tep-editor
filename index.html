@@ -28,6 +28,11 @@
 <body>
   <header id="toolbar">
     <div class="brand">Editor <b>TEP</b> <span>Transformar é Possível</span></div>
+    <div class="group" id="edicoes" hidden>
+      <select id="edSelect" title="Edição aberta"></select>
+      <button id="btnRenomearTep" title="Mudar o nome desta edição">✎</button>
+      <button id="btnNovoTep" class="primary" title="Criar uma edição nova">＋ Novo TEP</button>
+    </div>
     <div class="group">
       <button data-act="add-text" title="Adicionar caixa de texto ">＋ Texto</button>
       <button data-act="add-image" title="Adicionar imagem do computador">＋ Imagem</button>
@@ -49,7 +54,7 @@
     <div class="group">
       <button data-act="save-project" title="Baixar o projeto (.json) para continuar depois">Salvar projeto</button>
       <button data-act="open-project" title="Abrir um projeto .json">Abrir</button>
-      <button id="btnColar" title="Adicionar uma página montada pelo Claude (chat comum)">Colar página do Claude</button>
+      <button id="btnColar" title="Adicionar uma página montada por uma IA (Claude, ChatGPT, Gemini...)">Colar página da IA</button>
     </div>
     <div class="group">
       <button data-act="export-png" title="Baixar a página atual em PNG (300 dpi)">PNG</button>
@@ -106,5 +111,6 @@
   <script src="js/editor.js"></script>
   <script src="js/export.js"></script>
   <script src="js/importar.js"></script>
+  <script src="js/edicoes.js"></script>
 </body>
 </html>

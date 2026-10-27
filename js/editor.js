@@ -896,7 +896,7 @@ function renderPanel() {
       ${Sync.online ? `<h4>Segurança</h4>
       <div class="btnrow"><button data-act="page-history" title="Cópias guardadas antes de cada alteração">Histórico desta página</button>
         <button data-act="pages-deleted">Páginas apagadas</button></div>` : ''}
-      <hr><button class="danger" data-act="reset">Restaurar modelo original</button>`;
+      ${!Sync.online || Sync.edition === TEMPLATE_EDITION ? '<hr><button class="danger" data-act="reset">Restaurar modelo original</button>' : ''}`;
     panel.innerHTML = h;
     return;
   }
@@ -1239,7 +1239,7 @@ async function saveProject() {
     uploads[id] = { ...Uploads.meta[id], data: await blobToDataURL(await Uploads.blob(id)) };
   }
   const data = { format: 'tep-editor', version: 1, savedAt: new Date().toISOString(), state, uploads };
-  download(new Blob([JSON.stringify(data)], { type: 'application/json' }), `TEP_projeto_${stamp()}.json`);
+  download(new Blob([JSON.stringify(data)], { type: 'application/json' }), `${fileTag()}_projeto_${stamp()}.json`);
   toast('Projeto salvo. Use "Abrir" para continuar de onde parou.');
 }
 
@@ -1302,6 +1302,7 @@ window.addEventListener('resize', () => { if (window._autoFit) zoomFit(); });
   renderAll();
   if (shared) {
     Sync.connect();
+    renderEditions();
     Sync.schedule();                 // grava páginas novas do modelo, se houver (não espera o nome)
     await Sync.askName();
     Sync.offerLocalImport();

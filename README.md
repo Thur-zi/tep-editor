@@ -15,6 +15,8 @@ no tamanho real de impressão (772,4 × 1077,2 pt ≈ 27,2 × 38 cm).
 - **Páginas:** coluna da esquerda. Há modelos de capa, de matéria (faixa laranja, título, linha fina, texto, foto, citação) e de página em branco.
 - **Atalhos:** Ctrl+Z / Ctrl+Shift+Z, Ctrl+D duplica, Delete apaga, setas movem 1 pt (Shift = 10 pt),
   Shift mantém proporção, Alt desliga o encaixe nas guias, Ctrl + rodinha dá zoom.
+- **Várias edições:** a lista no alto troca o TEP aberto; **＋ Novo TEP** cria uma edição nova (do zero ou copiando
+  outra) e ✎ muda o nome. Cada edição fica salva separadamente, e o link da página guarda a edição (`?ed=...`).
 - **Edição compartilhada:** o jornal fica num banco de dados (Supabase) e qualquer pessoa com o link edita a
   mesma edição. As mudanças aparecem ao vivo para todos, a barra de cima mostra quem está online e em qual página,
   e quando duas pessoas mexem na mesma página as alterações são juntadas item por item.
@@ -22,8 +24,8 @@ no tamanho real de impressão (772,4 × 1077,2 pt ≈ 27,2 × 38 cm).
   páginas apagadas podem ser recuperadas ("Páginas apagadas"). Os dois botões ficam no painel da direita, com nada selecionado.
 - **Sem internet:** o editor continua funcionando e salva só no navegador até a conexão voltar.
 - **Salvar projeto** baixa um `.json` (com as fotos) como cópia de segurança; "Abrir" substitui o jornal compartilhado.
-- **Colar página do Claude:** quem usa o Claude no chat comum (inclusive no plano grátis) clica no botão,
-  copia as instruções, cola no Claude e depois cola a resposta dele de volta. A página entra como página nova.
+- **Colar página da IA:** funciona com qualquer IA de chat (Claude, ChatGPT, Gemini, Copilot, inclusive nos planos
+  grátis). Clique no botão, copie as instruções, cole na IA e depois cole a resposta dela de volta. A página entra como página nova.
 - **Baixar PDF:** todas as páginas, com o texto em vetor e as fontes Roboto embutidas.
   **PNG:** a página atual em 300 dpi.
 

@@ -673,6 +673,50 @@ function templateP8() {
   };
 }
 
+// Edição nova, do zero: capa + 6 páginas de matéria + última página com os anúncios fixos.
+const MESES = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+
+function romano(n) {
+  const t = [[10, 'X'], [9, 'IX'], [5, 'V'], [4, 'IV'], [1, 'I']];
+  let r = '';
+  for (const [v, l] of t) while (n >= v) { r += l; n -= v; }
+  return r;
+}
+
+function templateEdicaoNova(numero, mes, ano) {
+  const semModelo = (p) => { delete p.tid; delete p.tver; delete p.tsig; p.id = uid(); return p; };
+  const capa = semModelo(templateCapa());
+  const set = (name, props) => Object.assign(capa.elements.find(e => e.name === name), props);
+  set('Selo: mês', { text: mes });
+  set('Selo: ano', { text: String(ano) });
+  set('Selo: número', { text: `Nº ${numero}\nANO ${romano(ano - 2017)}` });
+  set('Manchete', { text: 'Manchete\nda capa' });
+  set('Texto da capa', { text: 'Texto de apoio da capa: duas ou três frases sobre a matéria principal.' });
+  set('Foto da capa', { src: null, nw: 1, nh: 1, ix: 0, iy: 0, iw: 415.7 });
+  set('Anúncio', { src: null, nw: 1, nh: 1, ix: 0, iy: 0, iw: 659 });
+
+  const materias = [2, 3, 4, 5, 6, 7].map(n => {
+    const p = semModelo(templateMateria());
+    p.name = `Pág. ${n}`;
+    return p;
+  });
+
+  const ultima = semModelo(templateP8());
+  ultima.name = 'Pág. 8 (anúncios)';
+  const fixos = ['Anúncios (coluna)', 'Anúncios, atendimento e expediente'];
+  const W = 431.8;
+  ultima.elements = ultima.elements.filter(e => e.name === 'Faixa da editoria' || e.name === 'Editoria' || fixos.includes(e.name));
+  ultima.elements.find(e => e.name === 'Editoria').text = 'EDITORIA';
+  ultima.elements.push(
+    textEl({ name: 'Título', text: 'Título da matéria', font: 'Roboto-Black', size: 24, lh: 29, color: COLORS.texto,
+      x: 56.7, y: 171.4, w: W, h: 29 }),
+    imageEl({ name: 'Foto', x: 56.7, y: 210, w: W, h: 250, iw: W }),
+    textEl({ name: 'Texto', text: 'Texto da matéria.', font: 'Roboto-Regular', size: 11.5, lh: 16, color: COLORS.texto,
+      x: 56.7, y: 474, w: W, h: 176 }),
+  );
+  return [capa, ...materias, ultima];
+}
+
 function templateBranco() {
   return { id: uid(), name: 'Página em branco', elements: [] };
 }

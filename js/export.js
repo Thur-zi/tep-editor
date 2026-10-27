@@ -152,7 +152,7 @@ async function exportPDF() {
         if (op < 1) pdf.setGState(new pdf.GState({ opacity: 1, 'stroke-opacity': 1 }));
       }
     }
-    download(pdf.output('blob'), `TEP_${stamp()}.pdf`);
+    download(pdf.output('blob'), `${fileTag()}_${stamp()}.pdf`);
     toast('PDF pronto! Confira a pasta de downloads.');
   } catch (err) {
     console.error(err);
@@ -206,7 +206,7 @@ async function exportPNG() {
   try {
     const cv = await renderPageCanvas(page(), PNG_DPI);
     const blob = await new Promise(res => cv.toBlob(res, 'image/png'));
-    download(blob, `TEP_pagina${state.cur + 1}_${stamp()}.png`);
+    download(blob, `${fileTag()}_pagina${state.cur + 1}_${stamp()}.png`);
     toast('PNG pronto (300 dpi).');
   } catch (err) {
     console.error(err);

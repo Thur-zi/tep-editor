@@ -4,6 +4,8 @@
 'use strict';
 
 const NAME_KEY = 'tep-editor:nome';
+const EDITION_KEY = 'tep-editor:edicao';
+const TEMPLATE_EDITION = 'ed-107';   // edição que recebe as páginas do modelo (js/template.js)
 
 const Sync = {
   db: null,
@@ -19,7 +21,20 @@ const Sync = {
   others: [],
   uploads: [],
   trackedPage: null,
+  edition: null,        // id da edição aberta
+  editions: [],         // [{id, name, created_at}]
 };
+
+// Nome da edição para usar em arquivos baixados ("Nº 107 · Novembro 2026" -> "TEP_107_Novembro_2026")
+function fileTag() {
+  const n = editionName().replace(/^N[ºo°]\s*/, '');
+  return 'TEP_' + (n.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^A-Za-z0-9]+/g, '_').replace(/^_|_$/g, '') || 'jornal');
+}
+
+function editionName() {
+  const e = Sync.editions.find(x => x.id === Sync.edition);
+  return e ? e.name : '';
+}
 
 function pageData(p) {
   return { name: p.name, tid: p.tid || null, tver: p.tver || null, tsig: p.tsig || null, elements: p.elements || [] };
@@ -95,7 +110,14 @@ Sync.init = async function () {
       auth: { persistSession: false },
       realtime: { params: { eventsPerSecond: 10 } },
     });
-    const pagesRes = await this.db.from('pages').select('*').order('position');
+    const edRes = await this.db.from('editions').select('*').order('created_at');
+    if (edRes.error) throw edRes.error;
+    this.editions = edRes.data;
+    let wanted = new URLSearchParams(location.search).get('ed');
+    if (!wanted) { try { wanted = localStorage.getItem(EDITION_KEY); } catch (e) { /* sem armazenamento */ } }
+    this.edition = (this.editions.find(e => e.id === wanted) || this.editions[this.editions.length - 1] || { id: TEMPLATE_EDITION }).id;
+    try { localStorage.setItem(EDITION_KEY, this.edition); } catch (e) { /* sem armazenamento */ }
+    const pagesRes = await this.db.from('pages').select('*').eq('edition_id', this.edition).order('position');
     if (pagesRes.error) throw pagesRes.error;
     this.online = true;
     // páginas do modelo já entregues = as que existem no banco, inclusive as apagadas (essas não voltam)
@@ -105,7 +127,8 @@ Sync.init = async function () {
       if (r.data && r.data.tid) s.seenTids.push(r.data.tid);
       if (!r.deleted) s.pages.push(pageFromData(r.id, r.data));
     }
-    const changed = addNewTemplatePages(s).concat(autoUpdateUntouched(s));
+    // só a edição do modelo recebe páginas novas/atualizadas de js/template.js
+    const changed = this.edition === TEMPLATE_EDITION ? addNewTemplatePages(s).concat(autoUpdateUntouched(s)) : [];
     if (!s.pages.length) s.pages.push(templateBranco());
     s.cur = Math.max(0, Math.min(s.cur || 0, s.pages.length - 1));
     this.listUploads();
@@ -121,7 +144,9 @@ Sync.init = async function () {
 Sync.connect = function () {
   if (!this.online) return;
   this.channel = this.db.channel('tep', { config: { presence: { key: this.clientId } } })
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'pages' }, (pl) => this.onRemote(pl.new))
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'pages', filter: `edition_id=eq.${this.edition}` },
+      (pl) => this.onRemote(pl.new))
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'editions' }, (pl) => this.onEdition(pl.new))
     .on('presence', { event: 'sync' }, () => this.onPresence())
     .subscribe((status) => {
       if (status === 'SUBSCRIBED') { this.trackedPage = null; this.track(); this.catchUp(); }
@@ -134,7 +159,7 @@ Sync.connect = function () {
 // Busca no banco o que mudou desde a última versão conhecida de cada página.
 Sync.catchUp = async function () {
   if (!this.online || this.flushing) return;
-  const { data, error } = await this.db.from('pages').select('id, rev');
+  const { data, error } = await this.db.from('pages').select('id, rev').eq('edition_id', this.edition);
   if (error || !data) return;
   const stale = data.filter(r => { const k = this.rows.get(r.id); return !k || r.rev > k.rev; }).map(r => r.id);
   if (!stale.length) return;
@@ -189,7 +214,7 @@ Sync.pushPage = async function (id, tries = 0) {
   if (pos < 0) return;
   const p = state.pages[pos];
   const known = this.rows.get(id);
-  const body = { position: pos, data: pageData(p), deleted: false, updated_by: this.name };
+  const body = { position: pos, data: pageData(p), deleted: false, updated_by: this.name, edition_id: this.edition };
   let res;
   if (!known) {
     res = await this.db.from('pages').insert(Object.assign({ id }, body)).select();
@@ -306,6 +331,53 @@ Sync.afterRemote = function (redraw) {
   if (!panel.contains(document.activeElement)) renderPanel();
 };
 
+/* ---------- edições (cada TEP) ---------- */
+
+Sync.onEdition = function (row) {
+  if (!row || !row.id) return;
+  const i = this.editions.findIndex(e => e.id === row.id);
+  if (i >= 0) this.editions[i] = row; else this.editions.push(row);
+  renderEditions();
+};
+
+Sync.openEdition = async function (id) {
+  if (id === this.edition) return;
+  clearTimeout(this.timer);
+  await this.flush();                      // termina de salvar a edição atual antes de trocar
+  try { localStorage.setItem(EDITION_KEY, id); } catch (e) { /* sem armazenamento */ }
+  const u = new URL(location.href);
+  u.searchParams.set('ed', id);
+  location.href = u.toString();
+};
+
+Sync.createEdition = async function (name, pages) {
+  const id = 'ed-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 6);
+  const ed = await this.db.from('editions').insert({ id, name, created_by: this.name }).select();
+  if (ed.error) throw ed.error;
+  const rows = pages.map((p, i) => ({ id: uid() + uid(), position: i, data: pageData(p), edition_id: id, updated_by: this.name }));
+  const res = await this.db.from('pages').insert(rows);
+  if (res.error) throw res.error;
+  return id;
+};
+
+Sync.renameEdition = async function (name) {
+  const { data, error } = await this.db.from('editions').update({ name }).eq('id', this.edition).select();
+  if (error || !data.length) throw error || new Error('sem permissão');
+  this.onEdition(data[0]);
+};
+
+// Páginas de outra edição, prontas para copiar (ids novos, sem vínculo com o modelo)
+Sync.copyPagesFrom = async function (editionId) {
+  const { data, error } = await this.db.from('pages').select('*').eq('edition_id', editionId).eq('deleted', false).order('position');
+  if (error) throw error;
+  return data.map(r => {
+    const p = JSON.parse(JSON.stringify(pageFromData(r.id, r.data)));
+    delete p.tid; delete p.tver; delete p.tsig;
+    p.elements.forEach(el => { el.id = uid(); });
+    return p;
+  });
+};
+
 /* ---------- quem está online ---------- */
 
 Sync.track = function () {
@@ -313,12 +385,13 @@ Sync.track = function () {
   const pid = page() && page().id;
   if (pid === this.trackedPage) return;
   this.trackedPage = pid;
-  this.channel.track({ name: this.name, page: pid });
+  this.channel.track({ name: this.name, page: pid, edition: this.edition });
 };
 
 Sync.onPresence = function () {
   const st = this.channel.presenceState();
-  this.others = Object.entries(st).filter(([k]) => k !== this.clientId).map(([, v]) => v[0]).filter(Boolean);
+  const todos = Object.entries(st).filter(([k]) => k !== this.clientId).map(([, v]) => v[0]).filter(Boolean);
+  this.others = todos.filter(o => o.edition === this.edition);
   const box = document.getElementById('presence');
   if (box) {
     box.innerHTML = this.others.map(o => {
@@ -402,7 +475,7 @@ Sync.restoreHistory = function (i) {
 Sync.showDeleted = async function () {
   openModal('<h3>Páginas apagadas</h3><p class="muted">Carregando…</p>');
   const { data, error } = await this.db.from('pages').select('id, data, updated_at, updated_by')
-    .eq('deleted', true).order('updated_at', { ascending: false }).limit(50);
+    .eq('deleted', true).eq('edition_id', this.edition).order('updated_at', { ascending: false }).limit(50);
   if (error) { document.getElementById('modalBody').innerHTML = '<p class="warn">Não consegui carregar.</p>'; return; }
   document.getElementById('modalBody').innerHTML = `<h3>Páginas apagadas</h3>
     ${data.length ? `<div class="hlist">${data.map(r => `<div class="hrow"><span><b>${esc(r.data.name || 'Página')}</b> · apagada ${when(r.updated_at)}
