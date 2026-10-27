@@ -59,6 +59,7 @@ const ASSETS = [
   { src: 'assets/tirol-asfalto.jpg', name: 'Tirol: Rua Júlio Mesquita', nw: 720, nh: 1280, k: 1 },
   { src: 'assets/tirol-canteiro.jpg', name: 'Tirol: canteiro da avenida', nw: 720, nh: 1280, k: 1 },
   { src: 'assets/qr-whatsapp.svg', name: 'QR code do WhatsApp (31) 98282-6850', nw: 1024, nh: 1024, k: 1 },
+  { src: 'assets/novembro-azul-foto.jpg', name: 'Novembro Azul: foto', nw: 1110, nh: 550, k: 1 },
   { src: 'assets/laco-novembro-azul.svg', name: 'Laço do Novembro Azul', nw: 1024, nh: 1024, k: 1 },
   { src: 'assets/anuncio-blackzap.jpg', name: 'Anúncio BlackZAP', nw: 1600, nh: 1240, k: 1 },
   { src: 'assets/cabecalho.png', name: 'Cabeçalho', nw: 2784, nh: 601, k: 1 },
@@ -526,7 +527,7 @@ function templateP7() {
     ['Dificuldade para urinar e presença de sangue na urina precisam de avaliação médica. A doença também pode não apresentar sintomas no início.', 42],
   ];
   const lista = [];
-  let y = 640;
+  let y = 700;
   itens.forEach(([t, h], i) => {
     lista.push(imageEl({ name: `Atenção ${i + 1}: marcador`, src: 'assets/laco-novembro-azul.svg', nw: 1024, nh: 1024,
       x: 78, y: y - 1, w: 22, h: 22, ix: 0, iy: 0, iw: 22 }));
@@ -535,7 +536,7 @@ function templateP7() {
     y += h + 12;
   });
   return {
-    id: uid(), tid: 'p7', tver: 2, name: 'Novembro Azul', elements: [
+    id: uid(), tid: 'p7', tver: 3, name: 'Novembro Azul', elements: [
       rectEl({ name: 'Faixa da editoria', fill: COLORS.laranjaFaixa, x: 56.7, y: 85, w: 659, h: 40.1, locked: true }),
       textEl({
         name: 'Editoria', text: 'NOVEMBRO AZUL', font: 'Roboto-Regular', size: 23.2, lh: 28,
@@ -554,34 +555,34 @@ function templateP7() {
         font: 'Roboto-Italic', size: 17, lh: 22, color: COLORS.verde, align: 'center', x: 56.7, y: 250, w: 659, h: 22,
       }),
       imageEl({
-        name: 'Laço do Novembro Azul', src: 'assets/laco-novembro-azul.svg', nw: 1024, nh: 1024,
-        x: 66, y: 292, w: 250, h: 250, ix: 0, iy: 0, iw: 250,
+        name: 'Foto do Novembro Azul', src: 'assets/novembro-azul-foto.jpg', nw: 1110, nh: 550,
+        x: 56.7, y: 288, w: 659, h: 270, ix: 0, iy: -28.27, iw: 659,
       }),
       textEl({
         name: 'Texto',
         text: 'O câncer de próstata é um dos mais comuns entre os homens. O **diagnóstico precoce** aumenta as ' +
           'chances de sucesso no tratamento.',
-        font: 'Roboto-Regular', size: 20, lh: 28, color: COLORS.texto, x: 340, y: 348, w: 375.7, h: 140,
+        font: 'Roboto-Regular', size: 18, lh: 25, color: COLORS.texto, x: 56.7, y: 574, w: 659, h: 50,
       }),
-      rectEl({ name: 'Fique atento: fundo', fill: AZUL_CLARO, x: 56.7, y: 566, w: 659, h: 232 }),
+      rectEl({ name: 'Fique atento: fundo', fill: AZUL_CLARO, x: 56.7, y: 640, w: 659, h: 206 }),
       textEl({
         name: 'Fique atento: título', text: 'FIQUE ATENTO!', font: 'Roboto-Black', size: 26, lh: 30, color: AZUL,
-        x: 80, y: 590, w: 400, h: 30,
+        x: 80, y: 658, w: 400, h: 30,
       }),
       ...lista,
-      rectEl({ name: 'Chamada: fundo', fill: AZUL, x: 56.7, y: 814, w: 659, h: 206.5 }),
+      rectEl({ name: 'Chamada: fundo', fill: AZUL, x: 56.7, y: 860, w: 659, h: 160.5 }),
       textEl({
         name: 'Chamada: título', text: 'NÃO ESPERE SENTIR ALGO PARA SE CUIDAR!', font: 'Roboto-Black', size: 27, lh: 32,
-        color: COLORS.branco, align: 'center', x: 56.7, y: 842, w: 659, h: 32,
+        color: COLORS.branco, align: 'center', x: 56.7, y: 876, w: 659, h: 32,
       }),
       textEl({
         name: 'Chamada: texto',
         text: 'Procure uma unidade de saúde e converse com um profissional\nsobre a prevenção e a detecção precoce do câncer de próstata.',
-        font: 'Roboto-Regular', size: 17, lh: 23, color: COLORS.branco, align: 'center', x: 56.7, y: 890, w: 659, h: 46,
+        font: 'Roboto-Regular', size: 16, lh: 21, color: COLORS.branco, align: 'center', x: 56.7, y: 916, w: 659, h: 42,
       }),
       textEl({
         name: 'Chamada: fecho', text: 'Sua saúde importa. Cuide-se!', font: 'Roboto-BoldItalic', size: 26, lh: 30,
-        color: COLORS.branco, align: 'center', x: 56.7, y: 958, w: 659, h: 30,
+        color: COLORS.branco, align: 'center', x: 56.7, y: 970, w: 659, h: 30,
       }),
     ],
   };
