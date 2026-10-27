@@ -31,6 +31,9 @@ Projeto Supabase `tep-editor` (São Paulo). Tabelas `pages` (uma linha por pági
 automáticas, feitas por gatilho no banco) e o armazenamento `uploads` (fotos enviadas). O endereço e a chave pública
 ficam em `js/config.js`; as regras do banco permitem ver, criar e editar, mas não apagar.
 
+O plano gratuito pausa o projeto após 7 dias sem uso. O agendamento `.github/workflows/manter-supabase-ativo.yml`
+consulta o banco às segundas e quintas para evitar isso; se a consulta falhar, o GitHub avisa por e-mail.
+
 ## Publicar no GitHub Pages
 
 Settings → Pages → *Deploy from a branch* → branch `main`, pasta `/ (root)`.

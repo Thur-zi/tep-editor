@@ -1,0 +1,32 @@
+# O plano gratuito do Supabase pausa o projeto depois de 7 dias sem uso.
+# Este agendamento consulta o banco do editor duas vezes por semana para mantê-lo ativo.
+# Se a consulta falhar (por exemplo, projeto já pausado), o GitHub avisa por e-mail.
+name: Manter banco do editor ativo
+
+on:
+  schedule:
+    - cron: '17 12 * * 1,4'   # segundas e quintas, 9h17 em Brasília
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  consultar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Consulta o banco do editor
+        run: |
+          code=$(curl -s -o /dev/null -w '%{http_code}' \
+            "https://zaswidphfhxqsmneekrm.supabase.co/rest/v1/pages?select=id&limit=1" \
+            -H "apikey: sb_publishable_VnmBtzabihUSYV1nyplJOQ__xc7CxGJ")
+          echo "Resposta do Supabase: $code"
+          test "$code" = "200"
+
+      # O GitHub desliga agendamentos de repositórios públicos sem atividade por 60 dias;
+      # reativar o próprio agendamento a cada execução evita isso.
+      - name: Mantém este agendamento ligado
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X PUT "repos/${{ github.repository }}/actions/workflows/manter-supabase-ativo.yml/enable"
