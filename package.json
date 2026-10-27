@@ -1,0 +1,12 @@
+{
+  "name": "tep-editor",
+  "private": true,
+  "description": "Editor do jornal Transformar é Possível. O site não precisa de build; isto só serve para a ferramenta tools/tep.mjs.",
+  "type": "module",
+  "scripts": {
+    "tep": "node tools/tep.mjs"
+  },
+  "devDependencies": {
+    "playwright": "1.49.1"
+  }
+}
