@@ -65,6 +65,10 @@ const ASSETS = [
   { src: 'assets/qr-whatsapp.svg', name: 'QR code do WhatsApp (31) 98282-6850', nw: 1024, nh: 1024, k: 1 },
   { src: 'assets/novembro-azul-foto.jpg', name: 'Novembro Azul: foto', nw: 1110, nh: 550, k: 1 },
   { src: 'assets/laco-novembro-azul.svg', name: 'Laço do Novembro Azul', nw: 1024, nh: 1024, k: 1 },
+  { src: 'assets/empreendedoras.svg', name: 'Ilustração: empreendedoras', nw: 2048, nh: 512, k: 1 },
+  { src: 'assets/bandeira-brasil.svg', name: 'Bandeira do Brasil', nw: 1000, nh: 700, k: 1 },
+  { src: 'assets/anuncios-coluna.jpg', name: 'Anúncios da última página (coluna)', nw: 859, nh: 3539, k: 1 },
+  { src: 'assets/rodape-anuncios-contato.jpg', name: 'Anúncios, atendimento e expediente', nw: 1802, nh: 1495, k: 1 },
   { src: 'assets/anuncio-blackzap.jpg', name: 'Anúncio BlackZAP', nw: 1600, nh: 1240, k: 1 },
   { src: 'assets/cabecalho.png', name: 'Cabeçalho', nw: 2784, nh: 601, k: 1 },
 ];
@@ -592,6 +596,70 @@ function templateP7() {
   };
 }
 
+// Pág. 8 – 19 de novembro (Empreendedorismo Feminino e Dia da Bandeira) + anúncios e rodapé da edição anterior
+function templateP8() {
+  const W = 431.8;                                  // coluna de texto, à esquerda da coluna de anúncios
+  const label = (name, text, y) => textEl({ name, text, font: 'Roboto-Bold', size: 13, lh: 16, color: COLORS.laranja,
+    x: 56.7, y, w: W, h: 16 });
+  return {
+    id: uid(), tid: 'p8', tver: 1, name: '19 de novembro', elements: [
+      rectEl({ name: 'Faixa da editoria', fill: COLORS.laranjaFaixa, x: 56.7, y: 85, w: 659, h: 40.1, locked: true }),
+      textEl({
+        name: 'Editoria', text: '19 DE NOVEMBRO', font: 'Roboto-Regular', size: 23.2, lh: 28,
+        color: COLORS.branco, align: 'center', x: 56.7, y: 92.07, w: 659, h: 28,
+      }),
+      // empreendedorismo feminino
+      label('Empreendedorismo: data', 'DIA DO EMPREENDEDORISMO FEMININO', 140),
+      textEl({
+        name: 'Empreendedorismo: título', text: 'Elas empreendem, geram renda e transformam vidas!', font: 'Roboto-Black',
+        size: 22, lh: 26, color: COLORS.texto, x: 56.7, y: 158, w: W, h: 52,
+      }),
+      imageEl({
+        name: 'Ilustração: empreendedoras', src: 'assets/empreendedoras.svg', nw: 2048, nh: 512,
+        x: 56.7, y: 218, w: W, h: 108, ix: 0, iy: 0, iw: W,
+      }),
+      textEl({
+        name: 'Empreendedorismo: texto',
+        text: 'À frente de muitos negócios, existem mulheres que enfrentam desafios, movimentam a economia, geram ' +
+          'oportunidades e correm atrás dos seus sonhos.\n\n**Valorizar essas mulheres é reconhecer a força de quem faz ' +
+          'acontecer todos os dias!**',
+        font: 'Roboto-Regular', size: 12, lh: 17, color: COLORS.texto, x: 56.7, y: 334, w: W, h: 102,
+      }),
+      rectEl({ name: 'Divisória', fill: COLORS.verde, x: 56.7, y: 444, w: W, h: 1.5 }),
+      // dia da bandeira
+      label('Bandeira: data', 'DIA DA BANDEIRA', 454),
+      imageEl({
+        name: 'Bandeira do Brasil', src: 'assets/bandeira-brasil.svg', nw: 1000, nh: 700,
+        x: 56.7, y: 474, w: 140, h: 98, ix: 0, iy: 0, iw: 140,
+      }),
+      textEl({
+        name: 'Bandeira: título', text: 'Orgulho de ser brasileiro. Compromisso com o nosso Brasil!', font: 'Roboto-Black',
+        size: 19, lh: 23, color: COLORS.texto, x: 210, y: 474, w: 278.5, h: 69,
+      }),
+      textEl({
+        name: 'Bandeira: texto 1', text: 'A bandeira representa nossa pátria, nossa história e nossos valores.',
+        font: 'Roboto-Regular', size: 12, lh: 16, color: COLORS.texto, x: 210, y: 545, w: 278.5, h: 32,
+      }),
+      textEl({
+        name: 'Bandeira: texto 2',
+        text: 'Amar o Brasil é defender a liberdade, valorizar a família, respeitar nossos símbolos e trabalhar por um ' +
+          'país com mais segurança, oportunidades e dignidade para todos.\n**Deus, Pátria e Família: valores que nos ' +
+          'inspiram a construir um Brasil melhor!**',
+        font: 'Roboto-Regular', size: 12, lh: 16, color: COLORS.texto, x: 56.7, y: 582, w: W, h: 64,
+      }),
+      // anúncios e rodapé: os mesmos da edição de outubro
+      imageEl({
+        name: 'Anúncios (coluna)', src: 'assets/anuncios-coluna.jpg', nw: 859, nh: 3539,
+        x: 510.4, y: 171.4, w: 206, h: 849.1, ix: 0, iy: 0, iw: 206,
+      }),
+      imageEl({
+        name: 'Anúncios, atendimento e expediente', src: 'assets/rodape-anuncios-contato.jpg', nw: 1802, nh: 1495,
+        x: 56.7, y: 662, w: 432.2, h: 358.5, ix: 0, iy: 0, iw: 432.2,
+      }),
+    ],
+  };
+}
+
 function templateBranco() {
   return { id: uid(), name: 'Página em branco', elements: [] };
 }
@@ -690,7 +758,7 @@ function legacySig(p) {
 // Páginas da edição atual, na ordem. Cada uma tem um "tid" fixo: quando uma página nova entra aqui,
 // quem já usa o editor recebe essa página automaticamente, sem perder o que já editou.
 function defaultState() {
-  const pages = [templateCapa(), templateP2(), templateP3(), templateP4(), templateP5(), templateP6(), templateP7()];
+  const pages = [templateCapa(), templateP2(), templateP3(), templateP4(), templateP5(), templateP6(), templateP7(), templateP8()];
   // id fixo por página do modelo: se duas pessoas abrirem o editor ao mesmo tempo, não duplica
   pages.forEach(p => { p.id = 'tpl-' + p.tid; p.tsig = pageSig(p); });
   return { version: 1, cur: 0, pages, seenTids: pages.map(p => p.tid) };
