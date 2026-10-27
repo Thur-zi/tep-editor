@@ -59,6 +59,7 @@ const ASSETS = [
   { src: 'assets/tirol-asfalto.jpg', name: 'Tirol: Rua Júlio Mesquita', nw: 720, nh: 1280, k: 1 },
   { src: 'assets/tirol-canteiro.jpg', name: 'Tirol: canteiro da avenida', nw: 720, nh: 1280, k: 1 },
   { src: 'assets/qr-whatsapp.svg', name: 'QR code do WhatsApp (31) 98282-6850', nw: 1024, nh: 1024, k: 1 },
+  { src: 'assets/laco-novembro-azul.svg', name: 'Laço do Novembro Azul', nw: 1024, nh: 1024, k: 1 },
   { src: 'assets/anuncio-blackzap.jpg', name: 'Anúncio BlackZAP', nw: 1600, nh: 1240, k: 1 },
   { src: 'assets/cabecalho.png', name: 'Cabeçalho', nw: 2784, nh: 601, k: 1 },
 ];
@@ -516,6 +517,76 @@ function templateP6() {
   };
 }
 
+// Pág. 7 – Novembro Azul (página de serviço, em azul; laço: Fluent Emoji, MIT, recolorido)
+function templateP7() {
+  const AZUL = '#1f5fa8', AZUL_CLARO = '#e3edf8';
+  const itens = [
+    ['Converse com um profissional de saúde sobre os cuidados e exames indicados para sua idade e seus fatores de risco.', 42],
+    ['Histórico familiar da doença merece atenção especial.', 21],
+    ['Dificuldade para urinar e presença de sangue na urina precisam de avaliação médica. A doença também pode não apresentar sintomas no início.', 42],
+  ];
+  const lista = [];
+  let y = 640;
+  itens.forEach(([t, h], i) => {
+    lista.push(textEl({ name: `Atenção ${i + 1}: marcador`, text: '•', font: 'Roboto-Black', size: 22, lh: 21, color: AZUL,
+      x: 82, y: y - 1, w: 14, h: 21 }));
+    lista.push(textEl({ name: `Atenção ${i + 1}`, text: t, font: 'Roboto-Regular', size: 15, lh: 21, color: COLORS.texto,
+      x: 100, y, w: 595, h }));
+    y += h + 12;
+  });
+  return {
+    id: uid(), tid: 'p7', tver: 1, name: 'Novembro Azul', elements: [
+      rectEl({ name: 'Faixa da editoria', fill: COLORS.laranjaFaixa, x: 56.7, y: 85, w: 659, h: 40.1, locked: true }),
+      textEl({
+        name: 'Editoria', text: 'NOVEMBRO AZUL', font: 'Roboto-Regular', size: 23.2, lh: 28,
+        color: COLORS.branco, align: 'center', x: 56.7, y: 92.07, w: 659, h: 28,
+      }),
+      textEl({
+        name: 'Título', text: 'HOMEM QUE SE CUIDA', font: 'Roboto-Black', size: 48, lh: 54,
+        color: AZUL, align: 'center', x: 56.7, y: 146, w: 659, h: 54,
+      }),
+      textEl({
+        name: 'Título: complemento', text: 'vive mais e melhor!', font: 'Roboto-BoldItalic', size: 34, lh: 40,
+        color: COLORS.texto, align: 'center', x: 56.7, y: 200, w: 659, h: 40,
+      }),
+      textEl({
+        name: 'Linha fina', text: 'Novembro Azul é um alerta: cuidar da saúde também é coisa de homem.',
+        font: 'Roboto-Italic', size: 17, lh: 22, color: COLORS.verde, align: 'center', x: 56.7, y: 250, w: 659, h: 22,
+      }),
+      imageEl({
+        name: 'Laço do Novembro Azul', src: 'assets/laco-novembro-azul.svg', nw: 1024, nh: 1024,
+        x: 66, y: 292, w: 250, h: 250, ix: 0, iy: 0, iw: 250,
+      }),
+      textEl({
+        name: 'Texto',
+        text: 'O câncer de próstata é um dos mais comuns entre os homens. O **diagnóstico precoce** aumenta as ' +
+          'chances de sucesso no tratamento.',
+        font: 'Roboto-Regular', size: 20, lh: 28, color: COLORS.texto, x: 340, y: 348, w: 375.7, h: 140,
+      }),
+      rectEl({ name: 'Fique atento: fundo', fill: AZUL_CLARO, x: 56.7, y: 566, w: 659, h: 232 }),
+      textEl({
+        name: 'Fique atento: título', text: 'FIQUE ATENTO!', font: 'Roboto-Black', size: 26, lh: 30, color: AZUL,
+        x: 80, y: 590, w: 400, h: 30,
+      }),
+      ...lista,
+      rectEl({ name: 'Chamada: fundo', fill: AZUL, x: 56.7, y: 814, w: 659, h: 206.5 }),
+      textEl({
+        name: 'Chamada: título', text: 'NÃO ESPERE SENTIR ALGO PARA SE CUIDAR!', font: 'Roboto-Black', size: 27, lh: 32,
+        color: COLORS.branco, align: 'center', x: 56.7, y: 842, w: 659, h: 32,
+      }),
+      textEl({
+        name: 'Chamada: texto',
+        text: 'Procure uma unidade de saúde e converse com um profissional\nsobre a prevenção e a detecção precoce do câncer de próstata.',
+        font: 'Roboto-Regular', size: 17, lh: 23, color: COLORS.branco, align: 'center', x: 56.7, y: 890, w: 659, h: 46,
+      }),
+      textEl({
+        name: 'Chamada: fecho', text: 'Sua saúde importa. Cuide-se!', font: 'Roboto-BoldItalic', size: 26, lh: 30,
+        color: COLORS.branco, align: 'center', x: 56.7, y: 958, w: 659, h: 30,
+      }),
+    ],
+  };
+}
+
 function templateBranco() {
   return { id: uid(), name: 'Página em branco', elements: [] };
 }
@@ -614,7 +685,7 @@ function legacySig(p) {
 // Páginas da edição atual, na ordem. Cada uma tem um "tid" fixo: quando uma página nova entra aqui,
 // quem já usa o editor recebe essa página automaticamente, sem perder o que já editou.
 function defaultState() {
-  const pages = [templateCapa(), templateP2(), templateP3(), templateP4(), templateP5(), templateP6()];
+  const pages = [templateCapa(), templateP2(), templateP3(), templateP4(), templateP5(), templateP6(), templateP7()];
   // id fixo por página do modelo: se duas pessoas abrirem o editor ao mesmo tempo, não duplica
   pages.forEach(p => { p.id = 'tpl-' + p.tid; p.tsig = pageSig(p); });
   return { version: 1, cur: 0, pages, seenTids: pages.map(p => p.tid) };
