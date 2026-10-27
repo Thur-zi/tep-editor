@@ -29,6 +29,8 @@ const FONTS = {
 
 // Imagens que já vêm no editor. "k" = fator de resolução real (frames de vídeo foram ampliados 2x).
 const ASSETS = [
+  { src: 'assets/casa-sala-atendimento.jpg', name: 'CASA: sala de atendimento (original)', nw: 1080, nh: 1920, k: 1 },
+  { src: 'assets/casa-fachada.jpg', name: 'CASA: fachada (original)', nw: 1080, nh: 1920, k: 1 },
   { src: 'assets/capa-casa-cumprimento.jpg', name: 'CASA: cumprimento na entrada (original)', nw: 1080, nh: 1920, k: 1 },
   { src: 'assets/foto-sala-espera.jpg', name: 'Sala de espera', nw: 960, nh: 1708, k: 0.5 },
   { src: 'assets/foto-sala-espera-2.jpg', name: 'Sala de espera 2', nw: 960, nh: 1708, k: 0.5 },
@@ -177,7 +179,7 @@ function templateP3() {
       align: 'center', x: MARGIN.l + col * i, y: 866, w: col, h: 18 }),
   ];
   return {
-    id: uid(), tid: 'p3', tver: 2, name: 'Causa Animal', elements: [
+    id: uid(), tid: 'p3', tver: 3, name: 'Causa Animal', elements: [
       rectEl({ name: 'Faixa da editoria', fill: COLORS.laranjaFaixa, x: 56.7, y: 85, w: 659, h: 40.1, locked: true }),
       textEl({
         name: 'Editoria', text: 'CAUSA ANIMAL', font: 'Roboto-Regular', size: 23.2, lh: 28,
@@ -200,12 +202,12 @@ function templateP3() {
         x: 56.7, y: 278, w: 207.4, h: 115,
       }),
       imageEl({
-        name: 'Foto: fachada', src: 'assets/foto-fachada.jpg', nw: 960, nh: 1708, k: 0.5,
-        x: 56.7, y: 405, w: 207.4, h: 175, ix: 0, iy: -51.8, iw: 207.4,
+        name: 'Foto: fachada', src: 'assets/casa-fachada.jpg', nw: 1080, nh: 1920, k: 1,
+        x: 56.7, y: 405, w: 207.4, h: 175, ix: 0, iy: -72.97, iw: 207.4,
       }),
       imageEl({
-        name: 'Foto: visita ao centro cirúrgico', src: 'assets/foto-visita-cirurgia.jpg', nw: 960, nh: 1708, k: 0.5,
-        x: 280, y: 278, w: 435.7, h: 302, ix: 0, iy: -181.5, iw: 435.7,
+        name: 'Foto: visita ao centro cirúrgico', src: 'assets/casa-sala-atendimento.jpg', nw: 1080, nh: 1920, k: 1,
+        x: 280, y: 278, w: 435.7, h: 302, ix: 0, iy: -116.99, iw: 435.7,
       }),
       // olho
       rectEl({ name: 'Fio acima do olho', fill: COLORS.verde, x: 56.7, y: 600, w: 659, h: 1.5 }),
