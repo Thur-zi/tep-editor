@@ -40,7 +40,8 @@ async function layoutText(p) {
     for (const span of n.firstChild.children) {
       const tn = span.firstChild;
       if (!tn) continue;
-      const re = /\S+/g;
+      // palavras com hífen viram pedaços ("abaixo-" + "assinado"): o navegador pode quebrar a linha no hífen
+      const re = /[^\s-]*-+|[^\s-]+/g;
       let mt;
       while ((mt = re.exec(tn.data))) {
         const r = document.createRange();

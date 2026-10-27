@@ -53,6 +53,9 @@ const ASSETS = [
   { src: 'assets/dia-evento-criancas.jpg', name: 'Evento para as crianças no Diamante', nw: 960, nh: 1708, k: 0.5 },
   { src: 'assets/dia-campanha.jpg', name: 'Campanha presidencial', nw: 720, nh: 1280, k: 1 },
   { src: 'assets/icone-instagram.svg', name: 'Ícone do Instagram', nw: 512, nh: 512, k: 1 },
+  { src: 'assets/tirol-wanderley.jpg', name: 'Tirol: Wanderley na obra', nw: 720, nh: 1280, k: 1 },
+  { src: 'assets/tirol-asfalto.jpg', name: 'Tirol: Rua Júlio Mesquita', nw: 720, nh: 1280, k: 1 },
+  { src: 'assets/tirol-canteiro.jpg', name: 'Tirol: canteiro da avenida', nw: 720, nh: 1280, k: 1 },
   { src: 'assets/anuncio-blackzap.jpg', name: 'Anúncio BlackZAP', nw: 1600, nh: 1240, k: 1 },
   { src: 'assets/cabecalho.png', name: 'Cabeçalho', nw: 2784, nh: 601, k: 1 },
 ];
@@ -336,6 +339,79 @@ function templateP4() {
   };
 }
 
+// Pág. 5 – Tirol: melhorias na prática (duas notas: asfalto da Júlio Mesquita e drenagem da rotatória)
+function templateP5() {
+  // foto recortada: (cx, cy, cw) é a área da foto original que aparece no quadro
+  const crop = (o, cx, cy, cw) => {
+    const f = o.w / cw;
+    return imageEl(Object.assign(o, { iw: o.nw * f, ix: -cx * f, iy: -cy * f }));
+  };
+  const stat = (name, a, b, y) => [
+    textEl({ name: name + ': número', text: a, font: 'Roboto-Black', size: 30, lh: 34, color: COLORS.laranja,
+      align: 'center', x: 56.7, y, w: 263, h: 34 }),
+    textEl({ name: name + ': legenda', text: b, font: 'Roboto-Regular', size: 12.5, lh: 16, color: COLORS.texto,
+      align: 'center', x: 56.7, y: y + 36, w: 263, h: 16 }),
+  ];
+  return {
+    id: uid(), tid: 'p5', tver: 1, name: 'Tirol', elements: [
+      rectEl({ name: 'Faixa da editoria', fill: COLORS.laranjaFaixa, x: 56.7, y: 85, w: 659, h: 40.1, locked: true }),
+      textEl({
+        name: 'Editoria', text: 'TIROL', font: 'Roboto-Regular', size: 23.2, lh: 28,
+        color: COLORS.branco, align: 'center', x: 56.7, y: 92.07, w: 659, h: 28,
+      }),
+      textEl({
+        name: 'Título', text: 'Melhorias na prática', font: 'Roboto-Black', size: 33, lh: 40,
+        color: COLORS.texto, align: 'center', x: 56.7, y: 150, w: 659, h: 42,
+      }),
+      textEl({
+        name: 'Linha fina', text: 'Pedidos levados pelo vereador Wanderley Porto viram obras no bairro',
+        font: 'Roboto-Italic', size: 16, lh: 20, color: COLORS.verde, align: 'center', x: 56.7, y: 196, w: 659, h: 22,
+      }),
+      // nota 1: asfalto
+      crop({ name: 'Foto: Rua Júlio Mesquita', src: 'assets/tirol-asfalto.jpg', nw: 720, nh: 1280,
+        x: 56.7, y: 240, w: 380, h: 290 }, 0, 190, 720),
+      textEl({
+        name: 'Asfalto: título', text: 'Rua Júlio Mesquita ganha asfalto novo', font: 'Roboto-Black', size: 22, lh: 27,
+        color: COLORS.texto, x: 452, y: 240, w: 263.7, h: 54,
+      }),
+      textEl({
+        name: 'Asfalto: texto',
+        text: 'Uma reivindicação dos moradores e comerciantes está sendo atendida! O recapeamento foi solicitado ' +
+          'pelo vereador Wanderley Porto, após receber um abaixo-assinado com mais de 100 assinaturas.',
+        font: 'Roboto-Regular', size: 13, lh: 18, color: COLORS.texto, x: 452, y: 306, w: 263.7, h: 112,
+      }),
+      rectEl({ name: 'Asfalto: fundo do destaque', fill: '#fdeae2', x: 452, y: 440, w: 263.7, h: 90 }),
+      textEl({
+        name: 'Asfalto: número', text: '+ de 100', font: 'Roboto-Black', size: 30, lh: 34, color: COLORS.laranja,
+        align: 'center', x: 452, y: 454, w: 263.7, h: 34,
+      }),
+      textEl({
+        name: 'Asfalto: legenda do número', text: 'assinaturas no abaixo-assinado', font: 'Roboto-Regular', size: 12.5, lh: 16,
+        color: COLORS.texto, align: 'center', x: 452, y: 492, w: 263.7, h: 16,
+      }),
+      rectEl({ name: 'Divisória entre as notas', fill: COLORS.verde, x: 56.7, y: 552, w: 659, h: 1.5 }),
+      // nota 2: drenagem
+      textEl({
+        name: 'Drenagem: título', text: 'R$\u00a014,7 milhões para reduzir alagamentos', font: 'Roboto-Black', size: 22,
+        lh: 27, color: COLORS.texto, x: 56.7, y: 572, w: 263, h: 54,
+      }),
+      textEl({
+        name: 'Drenagem: texto',
+        text: 'A nova rede de drenagem na rotatória do Tirol (Praça Deputado José Raimundo) e no entorno vai melhorar ' +
+          'o escoamento da água da chuva e ajudar a prevenir enchentes em 13 ruas e avenidas.\n\n' +
+          'A obra está sendo realizada após cobrança feita pelo vereador Wanderley Porto.',
+        font: 'Roboto-Regular', size: 13, lh: 18, color: COLORS.texto, x: 56.7, y: 638, w: 263, h: 190,
+      }),
+      rectEl({ name: 'Drenagem: fundo dos números', fill: '#fdeae2', x: 56.7, y: 842, w: 263, h: 178.5 }),
+      ...stat('Investimento', 'R$\u00a014,7 mi', 'em obras de drenagem', 860),
+      rectEl({ name: 'Drenagem: divisória dos números', fill: COLORS.laranja, x: 128.2, y: 936, w: 120, h: 1 }),
+      ...stat('Ruas', '13', 'ruas e avenidas beneficiadas', 948),
+      crop({ name: 'Foto: Wanderley no Tirol', src: 'assets/tirol-wanderley.jpg', nw: 720, nh: 1280,
+        x: 335.7, y: 572, w: 380, h: 448.5 }, 0, 110, 720),
+    ],
+  };
+}
+
 function templateBranco() {
   return { id: uid(), name: 'Página em branco', elements: [] };
 }
@@ -434,7 +510,7 @@ function legacySig(p) {
 // Páginas da edição atual, na ordem. Cada uma tem um "tid" fixo: quando uma página nova entra aqui,
 // quem já usa o editor recebe essa página automaticamente, sem perder o que já editou.
 function defaultState() {
-  const pages = [templateCapa(), templateP2(), templateP3(), templateP4()];
+  const pages = [templateCapa(), templateP2(), templateP3(), templateP4(), templateP5()];
   // id fixo por página do modelo: se duas pessoas abrirem o editor ao mesmo tempo, não duplica
   pages.forEach(p => { p.id = 'tpl-' + p.tid; p.tsig = pageSig(p); });
   return { version: 1, cur: 0, pages, seenTids: pages.map(p => p.tid) };
