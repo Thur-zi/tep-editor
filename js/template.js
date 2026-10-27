@@ -417,6 +417,88 @@ function templateP5() {
   };
 }
 
+// Pág. 6 – Atendimentos (números de janeiro a julho de 2026, com gráfico de barras feito de retângulos)
+function templateP6() {
+  const OFI = '#f26532', VIS = '#178f7f';            // par validado (cores distintas também para daltonismo)
+  const meses = [['Jan', 24, 0], ['Fev', 36, 4], ['Mar', 33, 11], ['Abr', 37, 8], ['Mai', 33, 9], ['Jun', 20, 11], ['Jul', 23, 11]];
+  const tileW = (659 - 2 * 16) / 3;
+  const tiles = [['+ de 300', 'conversas pelo WhatsApp'], ['206', 'ofícios enviados'], ['54', 'visitas técnicas']]
+    .flatMap(([n, l], i) => {
+      const x = 56.7 + i * (tileW + 16);
+      return [
+        rectEl({ name: `Destaque ${i + 1}: fundo`, fill: '#fdeae2', x, y: 262, w: tileW, h: 118 }),
+        textEl({ name: `Destaque ${i + 1}: número`, text: n, font: 'Roboto-Black', size: 46, lh: 52, color: COLORS.laranja,
+          align: 'center', x, y: 282, w: tileW, h: 52 }),
+        textEl({ name: `Destaque ${i + 1}: legenda`, text: l, font: 'Roboto-Regular', size: 15, lh: 19, color: COLORS.texto,
+          align: 'center', x, y: 338, w: tileW, h: 19 }),
+      ];
+    });
+  // gráfico: uma escala só (quantidade), 0 a 40, 11 pt por unidade
+  const base = 905, unit = 11, x0 = 96, x1 = MARGIN.r, gw = (x1 - x0) / meses.length, bw = 30;
+  const chart = [];
+  for (const v of [10, 20, 30, 40]) {
+    chart.push(rectEl({ name: `Grade ${v}`, fill: '#e6e5e0', x: x0, y: base - v * unit, w: x1 - x0, h: 0.75 }));
+    chart.push(textEl({ name: `Escala ${v}`, text: String(v), font: 'Roboto-Regular', size: 10, lh: 12, color: '#77746d',
+      align: 'right', x: 56.7, y: base - v * unit - 6, w: 32, h: 12 }));
+  }
+  meses.forEach(([m, o, v], i) => {
+    const cx = x0 + gw * i + gw / 2;
+    [[o, OFI, cx - bw - 1, 'ofícios'], [v, VIS, cx + 1, 'visitas']].forEach(([val, cor, bx, nome]) => {
+      if (val > 0) chart.push(rectEl({ name: `Barra ${m} ${nome}`, fill: cor, x: bx, y: base - val * unit, w: bw, h: val * unit }));
+      chart.push(textEl({ name: `Valor ${m} ${nome}`, text: String(val), font: 'Roboto-Bold', size: 12, lh: 14, color: COLORS.texto,
+        align: 'center', x: bx - 6, y: base - val * unit - 17, w: bw + 12, h: 14 }));
+    });
+    chart.push(textEl({ name: `Mês ${m}`, text: m, font: 'Roboto-Regular', size: 13, lh: 16, color: COLORS.texto,
+      align: 'center', x: cx - gw / 2, y: base + 8, w: gw, h: 16 }));
+  });
+  chart.push(rectEl({ name: 'Linha de base', fill: COLORS.texto, x: x0, y: base, w: x1 - x0, h: 1 }));
+  return {
+    id: uid(), tid: 'p6', tver: 1, name: 'Atendimentos', elements: [
+      rectEl({ name: 'Faixa da editoria', fill: COLORS.laranjaFaixa, x: 56.7, y: 85, w: 659, h: 40.1, locked: true }),
+      textEl({
+        name: 'Editoria', text: 'ATENDIMENTOS', font: 'Roboto-Regular', size: 23.2, lh: 28,
+        color: COLORS.branco, align: 'center', x: 56.7, y: 92.07, w: 659, h: 28,
+      }),
+      textEl({
+        name: 'Título', text: 'Nosso trabalho começa ouvindo você!', font: 'Roboto-Black', size: 33, lh: 40,
+        color: COLORS.texto, align: 'center', x: 56.7, y: 150, w: 659, h: 42,
+      }),
+      textEl({
+        name: 'Linha fina',
+        text: 'Confira os números de demandas recebidas e encaminhadas pela equipe do vereador Wanderley Porto, ' +
+          'por WhatsApp, ofícios e visitas técnicas.',
+        font: 'Roboto-Italic', size: 16, lh: 21, color: COLORS.verde, align: 'center', x: 96.2, y: 198, w: 580, h: 42,
+      }),
+      ...tiles,
+      textEl({
+        name: 'Período', text: '*Janeiro a julho de 2026', font: 'Roboto-Italic', size: 11, lh: 14, color: '#77746d',
+        align: 'right', x: 56.7, y: 386, w: 659, h: 14,
+      }),
+      textEl({
+        name: 'Gráfico: título', text: 'Ofícios e visitas técnicas por mês', font: 'Roboto-Black', size: 20, lh: 24,
+        color: COLORS.texto, x: 56.7, y: 424, w: 400, h: 24,
+      }),
+      // legenda (identidade nunca só pela cor: legenda + valores em cada barra)
+      rectEl({ name: 'Legenda: cor ofícios', fill: OFI, x: 470, y: 431, w: 11, h: 11 }),
+      textEl({ name: 'Legenda: ofícios', text: 'Ofícios', font: 'Roboto-Regular', size: 13, lh: 16, color: COLORS.texto,
+        x: 486, y: 428.5, w: 60, h: 16 }),
+      rectEl({ name: 'Legenda: cor visitas', fill: VIS, x: 562, y: 431, w: 11, h: 11 }),
+      textEl({ name: 'Legenda: visitas', text: 'Visitas técnicas', font: 'Roboto-Regular', size: 13, lh: 16, color: COLORS.texto,
+        x: 578, y: 428.5, w: 137.7, h: 16 }),
+      ...chart,
+      rectEl({ name: 'Rodapé: fio', fill: COLORS.verde, x: 56.7, y: 948, w: 659, h: 1.5 }),
+      textEl({
+        name: 'Rodapé: total', text: 'No período: **206 ofícios** e **54 visitas técnicas**',
+        font: 'Roboto-Regular', size: 15, lh: 19, color: COLORS.texto, align: 'center', x: 56.7, y: 962, w: 659, h: 19,
+      }),
+      textEl({
+        name: 'Rodapé: fonte', text: 'Fonte: gabinete do vereador Wanderley Porto. Visitas técnicas realizadas entre 26/02 e 31/07.',
+        font: 'Roboto-Italic', size: 10, lh: 12, color: '#77746d', align: 'center', x: 56.7, y: 990, w: 659, h: 12,
+      }),
+    ],
+  };
+}
+
 function templateBranco() {
   return { id: uid(), name: 'Página em branco', elements: [] };
 }
@@ -515,7 +597,7 @@ function legacySig(p) {
 // Páginas da edição atual, na ordem. Cada uma tem um "tid" fixo: quando uma página nova entra aqui,
 // quem já usa o editor recebe essa página automaticamente, sem perder o que já editou.
 function defaultState() {
-  const pages = [templateCapa(), templateP2(), templateP3(), templateP4(), templateP5()];
+  const pages = [templateCapa(), templateP2(), templateP3(), templateP4(), templateP5(), templateP6()];
   // id fixo por página do modelo: se duas pessoas abrirem o editor ao mesmo tempo, não duplica
   pages.forEach(p => { p.id = 'tpl-' + p.tid; p.tsig = pageSig(p); });
   return { version: 1, cur: 0, pages, seenTids: pages.map(p => p.tid) };
