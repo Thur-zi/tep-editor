@@ -29,6 +29,7 @@ const FONTS = {
 
 // Imagens que já vêm no editor. "k" = fator de resolução real (frames de vídeo foram ampliados 2x).
 const ASSETS = [
+  { src: 'assets/casa-triptico.jpg', name: 'CASA: três fotos da visita', nw: 2771, nh: 1920, k: 1 },
   { src: 'assets/casa-equipamento-inteiro.jpg', name: 'CASA: olhando o equipamento (frame inteiro)', nw: 2770, nh: 1920, k: 1 },
   { src: 'assets/casa-equipamento.jpg', name: 'CASA: olhando o equipamento (vídeo)', nw: 1080, nh: 1920, k: 1 },
   { src: 'assets/casa-conversa-diretoria.jpg', name: 'CASA: conversa com a diretoria (original)', nw: 1080, nh: 1920, k: 1 },
@@ -191,7 +192,7 @@ function templateP3() {
       align: 'center', x: MARGIN.l + col * i, y: 866, w: col, h: 18 }),
   ];
   return {
-    id: uid(), tid: 'p3', tver: 6, name: 'Causa Animal', elements: [
+    id: uid(), tid: 'p3', tver: 7, name: 'Causa Animal', elements: [
       rectEl({ name: 'Faixa da editoria', fill: COLORS.laranjaFaixa, x: 56.7, y: 85, w: 659, h: 40.1, locked: true }),
       textEl({
         name: 'Editoria', text: 'CAUSA ANIMAL', font: 'Roboto-Regular', size: 23.2, lh: 28,
@@ -218,7 +219,7 @@ function templateP3() {
         x: 56.7, y: 405, w: 207.4, h: 175, ix: 0, iy: -72.97, iw: 207.4,
       }),
       imageEl({
-        name: 'Foto: visita ao centro cirúrgico', src: 'assets/casa-equipamento-inteiro.jpg', nw: 2770, nh: 1920, k: 1,
+        name: 'Foto: visita ao centro cirúrgico', src: 'assets/casa-triptico.jpg', nw: 2771, nh: 1920, k: 1,
         x: 280, y: 278, w: 435.7, h: 302, ix: 0, iy: 0, iw: 435.7,
       }),
       // olho
