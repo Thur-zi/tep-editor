@@ -29,6 +29,7 @@ const FONTS = {
 
 // Imagens que já vêm no editor. "k" = fator de resolução real (frames de vídeo foram ampliados 2x).
 const ASSETS = [
+  { src: 'assets/capa-casa-cumprimento.jpg', name: 'CASA: cumprimento na entrada (original)', nw: 1080, nh: 1920, k: 1 },
   { src: 'assets/foto-sala-espera.jpg', name: 'Sala de espera', nw: 960, nh: 1708, k: 0.5 },
   { src: 'assets/foto-sala-espera-2.jpg', name: 'Sala de espera 2', nw: 960, nh: 1708, k: 0.5 },
   { src: 'assets/foto-sorriso.jpg', name: 'Conversa com tutora', nw: 960, nh: 1708, k: 0.5 },
@@ -93,7 +94,7 @@ function rectEl(o) {
 
 function templateCapa() {
   return {
-    id: uid(), tid: 'capa', name: 'Capa', elements: [
+    id: uid(), tid: 'capa', tver: 2, name: 'Capa', elements: [
       imageEl({
         name: 'Cabeçalho', src: 'assets/cabecalho.png', nw: 2784, nh: 601,
         x: 47.92, y: 88.0, w: 668.16, h: 144.24, ix: 0, iy: 0, iw: 668.16, locked: true,
@@ -111,8 +112,8 @@ function templateCapa() {
         color: COLORS.cinzaSelo, x: 683.6, y: 109.67, w: 32, h: 23,
       }),
       imageEl({
-        name: 'Foto da capa', src: 'assets/foto-sala-espera.jpg', nw: 960, nh: 1708, k: 0.5,
-        x: 300, y: 253.3, w: 415.7, h: 234.5, ix: 0, iy: -173.2, iw: 415.7,
+        name: 'Foto da capa', src: 'assets/capa-casa-cumprimento.jpg', nw: 1080, nh: 1920, k: 1,
+        x: 300, y: 253.3, w: 415.7, h: 234.5, ix: 0, iy: -107.77, iw: 415.7,
       }),
       textEl({
         name: 'Manchete', text: 'Centro Avançado de\nSaúde Animal', font: 'Roboto-Black', size: 27, lh: 35,
