@@ -354,7 +354,7 @@ function templateP5() {
       align: 'center', x: 56.7, y: y + 36, w: 263, h: 16 }),
   ];
   return {
-    id: uid(), tid: 'p5', tver: 2, name: 'Tirol', elements: [
+    id: uid(), tid: 'p5', tver: 3, name: 'Tirol', elements: [
       rectEl({ name: 'Faixa da editoria', fill: COLORS.laranjaFaixa, x: 56.7, y: 85, w: 659, h: 40.1, locked: true }),
       textEl({
         name: 'Editoria', text: 'TIROL', font: 'Roboto-Regular', size: 23.2, lh: 28,
@@ -393,22 +393,22 @@ function templateP5() {
       rectEl({ name: 'Divisória entre as notas', fill: COLORS.verde, x: 56.7, y: 552, w: 659, h: 1.5 }),
       // nota 2: drenagem
       textEl({
-        name: 'Drenagem: título', text: 'R$\u00a014,7 milhões para reduzir alagamentos', font: 'Roboto-Black', size: 22,
-        lh: 27, color: COLORS.texto, x: 56.7, y: 572, w: 263, h: 54,
+        name: 'Drenagem: título', text: 'R$\u00a014,7 milhões para reduzir alagamentos', font: 'Roboto-Black', size: 28,
+        lh: 34, color: COLORS.texto, align: 'center', x: 56.7, y: 570, w: 659, h: 34,
       }),
       textEl({
         name: 'Drenagem: texto',
         text: 'A nova rede de drenagem na rotatória do Tirol (Praça Deputado José Raimundo) e no entorno vai melhorar ' +
           'o escoamento da água da chuva e ajudar a prevenir enchentes em 13 ruas e avenidas.\n\n' +
           'A obra está sendo realizada após cobrança feita pelo vereador Wanderley Porto.',
-        font: 'Roboto-Regular', size: 13, lh: 18, color: COLORS.texto, x: 56.7, y: 638, w: 263, h: 190,
+        font: 'Roboto-Regular', size: 13, lh: 18, color: COLORS.texto, x: 56.7, y: 620, w: 263, h: 146,
       }),
-      rectEl({ name: 'Drenagem: fundo dos números', fill: '#fdeae2', x: 56.7, y: 842, w: 263, h: 178.5 }),
-      ...stat('Investimento', 'R$\u00a014,7 mi', 'em obras de drenagem', 860),
-      rectEl({ name: 'Drenagem: divisória dos números', fill: COLORS.laranja, x: 128.2, y: 936, w: 120, h: 1 }),
-      ...stat('Ruas', '13', 'ruas e avenidas beneficiadas', 948),
+      rectEl({ name: 'Drenagem: fundo dos números', fill: '#fdeae2', x: 56.7, y: 778, w: 263, h: 242.5 }),
+      ...stat('Investimento', 'R$\u00a014,7 mi', 'em obras de drenagem', 818),
+      rectEl({ name: 'Drenagem: divisória dos números', fill: COLORS.laranja, x: 128.2, y: 898.5, w: 120, h: 1 }),
+      ...stat('Ruas', '13', 'ruas e avenidas beneficiadas', 925),
       crop({ name: 'Foto: obra de drenagem', src: 'assets/tirol-drenagem.jpg', nw: 1600, nh: 808,
-        x: 335.7, y: 572, w: 380, h: 436 }, 710, 0, 704),
+        x: 335.7, y: 620, w: 380, h: 388 }, 660, 0, 791),
       textEl({
         name: 'Crédito da foto de drenagem', text: 'Foto: Divulgação/PBH', font: 'Roboto-Italic', size: 8, lh: 10,
         color: '#77746d', align: 'right', x: 335.7, y: 1010.5, w: 380, h: 10,
