@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="600" height="600">
+  <!-- Ícone original do jornal: empreendedorismo feminino (mulher + gráfico de crescimento) -->
+  <defs><clipPath id="c"><circle cx="50" cy="50" r="46"/></clipPath></defs>
+  <circle cx="50" cy="50" r="46" fill="#fff" stroke="#f26532" stroke-width="3"/>
+  <g clip-path="url(#c)">
+    <!-- gráfico de crescimento -->
+    <rect x="66" y="58" width="6" height="20" rx="1.5" fill="#178f7f"/>
+    <rect x="75" y="49" width="6" height="29" rx="1.5" fill="#178f7f"/>
+    <rect x="84" y="40" width="6" height="38" rx="1.5" fill="#178f7f"/>
+    <polyline points="63,50 72,42 78,45 88,31" fill="none" stroke="#231f20" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <polygon points="83,29 91,27 90,35" fill="#231f20"/>
+    <!-- cabelo longo (atrás) -->
+    <path d="M20 44 C18 22 56 18 56 42 C57 54 60 64 64 72 L16 72 C19 64 21 54 20 44 Z" fill="#5a2e1b"/>
+    <!-- blusa com decote em V -->
+    <path d="M10 100 C10 78 22 68 38 68 C54 68 66 78 66 100 Z" fill="#f26532"/>
+    <!-- pescoço e decote -->
+    <path d="M33 60 L43 60 L43 69 L38 76 L33 69 Z" fill="#f1b48f"/>
+    <!-- mechas caindo sobre os ombros -->
+    <path d="M20 50 C19 62 16 70 14 78 C20 77 25 72 27 66 C26 60 24 55 20 50 Z" fill="#5a2e1b"/>
+    <path d="M56 50 C57 62 60 70 62 78 C56 77 51 72 49 66 C50 60 52 55 56 50 Z" fill="#5a2e1b"/>
+    <!-- rosto -->
+    <ellipse cx="38" cy="46" rx="11" ry="13" fill="#f6c6a3"/>
+    <!-- franja lateral -->
+    <path d="M26 44 C25 31 37 27 47 31 C51 33 52 38 51 42 C46 35 37 34 30 40 C29 41 27 43 26 44 Z" fill="#5a2e1b"/>
+    <!-- olhos e boca -->
+    <circle cx="34" cy="47" r="1.4" fill="#231f20"/>
+    <circle cx="42.5" cy="47" r="1.4" fill="#231f20"/>
+    <path d="M34.5 53 C36.5 55.5 40 55.5 42 53" fill="none" stroke="#c8344a" stroke-width="1.8" stroke-linecap="round"/>
+    <!-- brincos -->
+    <circle cx="27" cy="51" r="2" fill="#f2b705"/>
+    <circle cx="49" cy="51" r="2" fill="#f2b705"/>
+  </g>
+</svg>
