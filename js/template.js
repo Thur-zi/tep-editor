@@ -53,6 +53,7 @@ const ASSETS = [
   { src: 'assets/dia-evento-criancas.jpg', name: 'Evento para as crianças no Diamante', nw: 960, nh: 1708, k: 0.5 },
   { src: 'assets/dia-campanha.jpg', name: 'Campanha presidencial', nw: 720, nh: 1280, k: 1 },
   { src: 'assets/icone-instagram.svg', name: 'Ícone do Instagram', nw: 512, nh: 512, k: 1 },
+  { src: 'assets/tirol-drenagem.jpg', name: 'Tirol: obra de drenagem (Divulgação/PBH)', nw: 1600, nh: 808, k: 1 },
   { src: 'assets/tirol-wanderley.jpg', name: 'Tirol: Wanderley na obra', nw: 720, nh: 1280, k: 1 },
   { src: 'assets/tirol-asfalto.jpg', name: 'Tirol: Rua Júlio Mesquita', nw: 720, nh: 1280, k: 1 },
   { src: 'assets/tirol-canteiro.jpg', name: 'Tirol: canteiro da avenida', nw: 720, nh: 1280, k: 1 },
@@ -353,7 +354,7 @@ function templateP5() {
       align: 'center', x: 56.7, y: y + 36, w: 263, h: 16 }),
   ];
   return {
-    id: uid(), tid: 'p5', tver: 1, name: 'Tirol', elements: [
+    id: uid(), tid: 'p5', tver: 2, name: 'Tirol', elements: [
       rectEl({ name: 'Faixa da editoria', fill: COLORS.laranjaFaixa, x: 56.7, y: 85, w: 659, h: 40.1, locked: true }),
       textEl({
         name: 'Editoria', text: 'TIROL', font: 'Roboto-Regular', size: 23.2, lh: 28,
@@ -406,8 +407,12 @@ function templateP5() {
       ...stat('Investimento', 'R$\u00a014,7 mi', 'em obras de drenagem', 860),
       rectEl({ name: 'Drenagem: divisória dos números', fill: COLORS.laranja, x: 128.2, y: 936, w: 120, h: 1 }),
       ...stat('Ruas', '13', 'ruas e avenidas beneficiadas', 948),
-      crop({ name: 'Foto: Wanderley no Tirol', src: 'assets/tirol-wanderley.jpg', nw: 720, nh: 1280,
-        x: 335.7, y: 572, w: 380, h: 448.5 }, 0, 110, 720),
+      crop({ name: 'Foto: obra de drenagem', src: 'assets/tirol-drenagem.jpg', nw: 1600, nh: 808,
+        x: 335.7, y: 572, w: 380, h: 436 }, 710, 0, 704),
+      textEl({
+        name: 'Crédito da foto de drenagem', text: 'Foto: Divulgação/PBH', font: 'Roboto-Italic', size: 8, lh: 10,
+        color: '#77746d', align: 'right', x: 335.7, y: 1010.5, w: 380, h: 10,
+      }),
     ],
   };
 }
