@@ -1,6 +1,7 @@
 # O plano gratuito do Supabase pausa o projeto depois de 7 dias sem uso.
-# Este agendamento consulta o banco do editor todo dia para mantê-lo ativo.
-# Se a consulta falhar (por exemplo, projeto já pausado), o GitHub avisa por e-mail.
+# Uma simples leitura não bastou (o aviso de pausa chegou mesmo assim), então este agendamento faz, todo dia,
+# uma leitura E uma gravação de verdade no banco do editor (atualiza a linha "manter-ativo" da tabela meta).
+# Se falhar (por exemplo, projeto já pausado), o GitHub avisa por e-mail.
 name: Manter banco do editor ativo
 
 on:
@@ -12,17 +13,26 @@ permissions:
   actions: write
   contents: read
 
+env:
+  SUPABASE_URL: https://zaswidphfhxqsmneekrm.supabase.co
+  SUPABASE_KEY: sb_publishable_VnmBtzabihUSYV1nyplJOQ__xc7CxGJ
+
 jobs:
-  consultar:
+  manter-ativo:
     runs-on: ubuntu-latest
     steps:
-      - name: Consulta o banco do editor
+      - name: Lê e grava no banco do editor
         run: |
-          code=$(curl -s -o /dev/null -w '%{http_code}' \
-            "https://zaswidphfhxqsmneekrm.supabase.co/rest/v1/pages?select=id&limit=1" \
-            -H "apikey: sb_publishable_VnmBtzabihUSYV1nyplJOQ__xc7CxGJ")
-          echo "Resposta do Supabase: $code"
-          test "$code" = "200"
+          agora=$(date -u +%FT%TZ)
+          leitura=$(curl -s -o /dev/null -w '%{http_code}' \
+            "$SUPABASE_URL/rest/v1/pages?select=id&limit=1" -H "apikey: $SUPABASE_KEY")
+          gravacao=$(curl -s -o /dev/null -w '%{http_code}' -X POST \
+            "$SUPABASE_URL/rest/v1/meta?on_conflict=key" \
+            -H "apikey: $SUPABASE_KEY" -H "Authorization: Bearer $SUPABASE_KEY" \
+            -H "Content-Type: application/json" -H "Prefer: resolution=merge-duplicates" \
+            -d "{\"key\":\"manter-ativo\",\"value\":{\"origem\":\"github\",\"em\":\"$agora\"},\"updated_at\":\"$agora\"}")
+          echo "Leitura: $leitura  Gravação: $gravacao"
+          test "$leitura" = "200" && test "$gravacao" = "201" -o "$gravacao" = "200"
 
       # O GitHub desliga agendamentos de repositórios públicos sem atividade por 60 dias;
       # reativar o próprio agendamento a cada execução evita isso.
