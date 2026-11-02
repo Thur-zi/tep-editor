@@ -1,11 +1,11 @@
 # O plano gratuito do Supabase pausa o projeto depois de 7 dias sem uso.
-# Este agendamento consulta o banco do editor duas vezes por semana para mantê-lo ativo.
+# Este agendamento consulta o banco do editor todo dia para mantê-lo ativo.
 # Se a consulta falhar (por exemplo, projeto já pausado), o GitHub avisa por e-mail.
 name: Manter banco do editor ativo
 
 on:
   schedule:
-    - cron: '17 12 * * 1,4'   # segundas e quintas, 9h17 em Brasília
+    - cron: '17 12 * * *'   # todo dia, 9h17 em Brasília
   workflow_dispatch:
 
 permissions:

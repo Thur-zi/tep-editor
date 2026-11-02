@@ -42,7 +42,7 @@ automáticas, feitas por gatilho no banco) e o armazenamento `uploads` (fotos en
 ficam em `js/config.js`; as regras do banco permitem ver, criar e editar, mas não apagar.
 
 O plano gratuito pausa o projeto após 7 dias sem uso. O agendamento `.github/workflows/manter-supabase-ativo.yml`
-consulta o banco às segundas e quintas para evitar isso; se a consulta falhar, o GitHub avisa por e-mail.
+consulta o banco todo dia para evitar isso; se a consulta falhar, o GitHub avisa por e-mail.
 
 ## Publicar no GitHub Pages
 
