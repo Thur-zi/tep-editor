@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "tep": {
+      "type": "http",
+      "url": "https://zaswidphfhxqsmneekrm.supabase.co/functions/v1/tep-mcp"
+    }
+  }
+}
