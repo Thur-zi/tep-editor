@@ -19,6 +19,9 @@ node tools/tep.mjs foto caminho/foto.jpg            # envia uma foto (JPG, PNG, 
 node tools/tep.mjs galeria                          # imagens que já existem em assets/
 ```
 
+Se o seu ambiente aceitar conectores MCP, também dá para usar o servidor MCP do jornal em vez desta ferramenta:
+`https://zaswidphfhxqsmneekrm.supabase.co/functions/v1/tep-mcp` (ferramentas `ler_pagina`, `salvar_pagina` etc.).
+
 Defina o nome de quem está editando com `TEP_NOME="Nome da pessoa"` antes dos comandos (aparece no histórico).
 
 ## Fluxo de trabalho

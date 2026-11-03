@@ -283,6 +283,12 @@ Sync.applyPending = function () {
 
 Sync.applyRemote = function (row) {
   const known = this.rows.get(row.id);
+  // mudança feita por uma IA (servidor MCP ou ferramenta do Codex): avisa quem está com o editor aberto
+  if (/\(IA\)$/.test(row.updated_by || '') && !row.deleted) {
+    const i = state.pages.findIndex(p => p.id === row.id);
+    const nome = (row.data && row.data.name) || 'uma página';
+    toast(`🤖 ${row.updated_by} ${i >= 0 ? 'alterou' : 'criou'} "${nome}".`, 6000);
+  }
   const idx = state.pages.findIndex(p => p.id === row.id);
   const curId = page() && page().id;
   let pushBack = false;

@@ -26,7 +26,7 @@ const EDITOR_URL = 'https://thur-zi.github.io/tep-editor/';
 const PAGE_W = 772.441, PAGE_H = 1077.17;
 const FONTES = ['Roboto-Regular', 'Roboto-Italic', 'Roboto-Medium', 'Roboto-Bold', 'Roboto-BoldItalic', 'Roboto-Black',
   'RobotoCondensed-Regular', 'RobotoCondensed-Bold'];
-const AUTOR = process.env.TEP_NOME || 'Codex';
+const AUTOR = (process.env.TEP_NOME || 'Codex') + ' (IA)';   // "(IA)" faz o editor avisar quem está online
 
 const cfg = await readFile(join(RAIZ, 'js/config.js'), 'utf8');
 const URL_DB = cfg.match(/SUPABASE_URL\s*=\s*'([^']+)'/)[1];

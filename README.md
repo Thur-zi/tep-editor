@@ -33,6 +33,16 @@ no tamanho real de impressão (772,4 × 1077,2 pt ≈ 27,2 × 38 cm).
   **Versão web:** o mesmo PDF, leve para publicar no site (fotos reduzidas a 120 dpi).
   **PNG:** a página atual em 300 dpi.
 
+## Conectar uma IA (MCP)
+
+O botão **🔌 Conectar IA** mostra o endereço do servidor MCP do jornal
+(`https://zaswidphfhxqsmneekrm.supabase.co/functions/v1/tep-mcp`) e como ligá-lo no Claude, ChatGPT, Codex, Cursor etc.
+Ferramentas: `guia_de_diagramacao`, `listar_edicoes`, `listar_paginas`, `ler_pagina`, `salvar_pagina` (com controle de
+versão), `criar_pagina`, `galeria`, `enviar_imagem_por_url` e `ver_pagina` (link do editor com `?ed=...&p=N`).
+Edições feitas por IA ficam com "(IA)" no nome do autor e aparecem com o aviso 🤖 para quem está com o editor aberto.
+O código está em `supabase/functions/tep-mcp/index.ts` (Supabase Edge Function, sem verificação de JWT: acesso aberto
+como o do editor).
+
 ## Editar pelo Codex (ou outro agente)
 
 `tools/tep.mjs` lê e grava as páginas do jornal pela linha de comando; as instruções para o agente estão em

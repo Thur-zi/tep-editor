@@ -1328,6 +1328,9 @@ window.addEventListener('resize', () => { if (window._autoFit) zoomFit(); });
     state = loadState();
     Sync.setStatus('offline');
   }
+  // ?p=3 abre direto na página 3 (links devolvidos pelas IAs)
+  const pIni = parseInt(new URLSearchParams(location.search).get('p'), 10);
+  if (pIni >= 1) state.cur = Math.min(pIni, state.pages.length) - 1;
   hist.last = JSON.stringify(state);
   await loadFonts();
   renderAll();

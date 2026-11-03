@@ -206,6 +206,11 @@ hr { border: 0; border-top: 1px solid var(--ui-border); margin: 14px 0; }
 .hrow { display: flex; align-items: center; gap: 8px; justify-content: space-between; padding: 6px 10px; border-bottom: 1px solid #efeee9; font-size: 12px; }
 .hrow:last-child { border-bottom: 0; }
 
+button.agente { border-color: #178f7f; color: #178f7f; font-weight: 600; }
+button.agente:hover { background: #e8f5f3; }
+#modal details { border: 1px solid var(--ui-border); border-radius: 6px; padding: 6px 10px; margin: 8px 0; }
+#modal summary { cursor: pointer; }
+
 #toast {
   position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%) translateY(20px);
   background: #23211f; color: #fff; padding: 9px 16px; border-radius: 8px;
