@@ -12,6 +12,7 @@ no tamanho real de impressão (772,4 × 1077,2 pt ≈ 27,2 × 38 cm).
   Os cantos aumentam a foto e o quadro juntos; as laterais cortam. "Trocar por arquivo…" envia uma foto do computador,
   e também dá para arrastar a imagem direto para a página.
   O painel mostra a **resolução efetiva** (ideal acima de 200 dpi para impressão).
+  Aceita JPG, PNG, AVIF, WebP, HEIC/HEIF (iPhone), TIFF, GIF e BMP: os outros formatos viram JPG (ou PNG, se tiverem transparência).
 - **Páginas:** coluna da esquerda. Há modelos de capa, de matéria (faixa laranja, título, linha fina, texto, foto, citação) e de página em branco.
 - **Atalhos:** Ctrl+Z / Ctrl+Shift+Z, Ctrl+D duplica, Delete apaga, setas movem 1 pt (Shift = 10 pt),
   Shift mantém proporção, Alt desliga o encaixe nas guias, Ctrl + rodinha dá zoom.
@@ -57,3 +58,4 @@ Settings → Pages → *Deploy from a branch* → branch `main`, pasta `/ (root)
 - `js/sync.js`: salvamento no banco, ao vivo, junção de alterações, histórico e presença.
 - `js/vendor/jspdf.umd.min.js`: jsPDF 2.5.1 (MIT), usado para gerar o PDF.
 - `js/vendor/supabase.min.js`: supabase-js 2.45.4 (MIT).
+- `js/vendor/heic2any.min.js` (heic2any 0.0.4, MIT) e `js/vendor/UTIF.js` (UTIF 3.1.0, MIT): leem HEIC e TIFF, carregados só quando necessário.

@@ -647,7 +647,7 @@ viewport.addEventListener('pointerleave', () => { if (hoverId) { hoverId = null;
 viewport.addEventListener('dragover', (e) => { e.preventDefault(); });
 viewport.addEventListener('drop', async (e) => {
   e.preventDefault();
-  const f = [...(e.dataTransfer.files || [])].find(x => x.type.startsWith('image/'));
+  const f = [...(e.dataTransfer.files || [])].find(ehImagem);
   if (!f) return;
   const p = toPt(e);
   const hit = elAt(e);
@@ -687,8 +687,20 @@ function effectiveDpi(el) {
   return Math.round(el.nw * (el.k || 1) / (el.iw / 72));
 }
 
+// Converte o arquivo (AVIF, WebP, HEIC, TIFF...) e envia; avisa se não der para abrir
+async function enviarImagem(file) {
+  try {
+    const { blob, name } = await prepararImagem(file);
+    return await Uploads.add(blob, name);
+  } catch (e) {
+    console.error(e);
+    toast(`Não consegui usar "${file.name}": ${e.message || e}. Tente salvar como JPG ou PNG.`, 7000);
+    throw e;
+  }
+}
+
 async function replaceImage(el, file) {
-  const up = await Uploads.add(file, file.name);
+  const up = await enviarImagem(file);
   setImageSource(el, up.src, up.w, up.h, 1);
 }
 
@@ -699,7 +711,7 @@ function setImageSource(el, src, nw, nh, k) {
 }
 
 async function addImageFromFile(file, at) {
-  const up = await Uploads.add(file, file.name);
+  const up = await enviarImagem(file);
   const w = 300;
   const h = w * up.h / up.w;
   const el = imageEl({

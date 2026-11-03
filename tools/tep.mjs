@@ -8,14 +8,16 @@
 //   node tools/tep.mjs verificar <arquivo.json>        confere se tudo cabe na página e se as fontes/imagens existem
 //   node tools/tep.mjs enviar <arquivo.json>           grava a página editada no jornal (falha se alguém mudou antes)
 //   node tools/tep.mjs nova <arquivo.json> [--ed ID] [--depois N]   cria uma página nova (padrão: no fim)
-//   node tools/tep.mjs foto <imagem.jpg|png>           envia uma foto e mostra o "src", "nw" e "nh" para usar
+//   node tools/tep.mjs foto <imagem>                   envia uma foto (JPG, PNG, AVIF, WebP, HEIC, TIFF...) e mostra "src", "nw", "nh"
 //   node tools/tep.mjs galeria                         lista as imagens que já existem no projeto (assets/)
 //   node tools/tep.mjs ver <n|id|arquivo.json> [--ed ID] [--saida arquivo.png]   gera a imagem da página (precisa de Playwright)
 //
 // Unidades em pontos (pt). Página 772.4 × 1077.2; área útil x 56.7–715.7, y 85–1020.5. Detalhes em AGENTS.md.
 
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
-import { existsSync } from 'node:fs';
+import { existsSync, mkdtempSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import { tmpdir } from 'node:os';
 import { dirname, join, basename, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -195,9 +197,21 @@ switch (cmd) {
   }
   case 'foto': {
     if (!ref) falha('diga o arquivo: node tools/tep.mjs foto foto.jpg');
-    const buf = await readFile(ref);
+    let arquivo = ref;
+    let ext = extname(ref).toLowerCase().replace('.jpeg', '.jpg');
+    if (ext !== '.jpg' && ext !== '.png') {
+      // outros formatos (AVIF, WebP, HEIC, TIFF, GIF, BMP...): converte para JPEG com o que houver na máquina
+      arquivo = join(mkdtempSync(join(tmpdir(), 'tep-')), 'foto.jpg');
+      const tentativas = [['magick', [ref + '[0]', '-auto-orient', '-quality', '92', arquivo]],
+        ['convert', [ref + '[0]', '-auto-orient', '-quality', '92', arquivo]],
+        ['sips', ['-s', 'format', 'jpeg', ref, '--out', arquivo]],
+        ['ffmpeg', ['-v', 'error', '-y', '-i', ref, '-frames:v', '1', '-q:v', '2', arquivo]]];
+      const ok = tentativas.some(([cmd, a]) => { try { execFileSync(cmd, a, { stdio: 'ignore' }); return existsSync(arquivo); } catch (e) { return false; } });
+      if (!ok) falha(`não consegui converter ${ext} para JPG (instale o ImageMagick ou converta a foto antes)`);
+      ext = '.jpg';
+    }
+    const buf = await readFile(arquivo);
     const { w, h } = tamanhoImagem(buf);
-    const ext = extname(ref).toLowerCase().replace('.jpeg', '.jpg');
     const nome = `${Date.now()}-${uid().slice(0, 5)}-${slug(basename(ref, extname(ref))).slice(0, 40)}${ext}`;
     const r = await fetch(`${URL_DB}/storage/v1/object/uploads/${nome}`, {
       method: 'POST', body: buf,

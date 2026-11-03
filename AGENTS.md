@@ -15,7 +15,7 @@ node tools/tep.mjs verificar paginas/03-....json    # confere margens, fontes, i
 node tools/tep.mjs ver paginas/03-....json          # gera pagina.png para você conferir o resultado (precisa de Playwright)
 node tools/tep.mjs enviar paginas/03-....json       # grava a página editada
 node tools/tep.mjs nova arquivo.json [--depois 3]   # cria uma página nova (depois da página 3)
-node tools/tep.mjs foto caminho/foto.jpg            # envia uma foto e devolve src, nw, nh
+node tools/tep.mjs foto caminho/foto.jpg            # envia uma foto (JPG, PNG, AVIF, WebP, HEIC...) e devolve src, nw, nh
 node tools/tep.mjs galeria                          # imagens que já existem em assets/
 ```
 
