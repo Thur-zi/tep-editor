@@ -13,6 +13,8 @@ no tamanho real de impressão (772,4 × 1077,2 pt ≈ 27,2 × 38 cm).
   e também dá para arrastar a imagem direto para a página.
   O painel mostra a **resolução efetiva** (ideal acima de 200 dpi para impressão).
   Aceita JPG, PNG, AVIF, WebP, HEIC/HEIF (iPhone), TIFF, GIF e BMP: os outros formatos viram JPG (ou PNG, se tiverem transparência).
+  Também dá para **colar** uma imagem copiada (Ctrl+V; troca a foto selecionada ou adiciona uma nova) e arrastar imagens de outros sites.
+  Ao publicar mudanças, atualize o número `?v=` dos arquivos no `index.html` para os navegadores não usarem a versão antiga.
 - **Páginas:** coluna da esquerda. Há modelos de capa, de matéria (faixa laranja, título, linha fina, texto, foto, citação) e de página em branco.
 - **Atalhos:** Ctrl+Z / Ctrl+Shift+Z, Ctrl+D duplica, Delete apaga, setas movem 1 pt (Shift = 10 pt),
   Shift mantém proporção, Alt desliga o encaixe nas guias, Ctrl + rodinha dá zoom.

@@ -72,6 +72,30 @@ function temTransparencia(ctx, w, h) {
   return false;
 }
 
+// Acha a imagem num arrastar/colar: arquivo do computador, imagem copiada ou imagem arrastada de outro site.
+async function imagemDeTransferencia(dt) {
+  if (!dt) return null;
+  const arq = [...(dt.files || [])].find(ehImagem)
+    || [...(dt.items || [])].filter(i => i.kind === 'file').map(i => i.getAsFile()).find(f => f && ehImagem(f));
+  if (arq) return arq;
+  const html = dt.getData && dt.getData('text/html');
+  const uri = dt.getData && (dt.getData('text/uri-list') || dt.getData('text/plain'));
+  const m = html && html.match(/<img[^>]+src=["']([^"']+)["']/i);
+  const url = (m && m[1]) || (uri && uri.trim().split('\n')[0]);
+  if (!url || !/^(https?:|data:image\/)/i.test(url)) return null;
+  let blob;
+  try {
+    const r = await fetch(url);
+    if (!r.ok) throw new Error(r.status);
+    blob = await r.blob();
+  } catch (e) {
+    throw new Error('o site de onde veio a imagem não deixa copiá-la. Salve a imagem no computador e envie o arquivo');
+  }
+  if (!(blob.type || '').startsWith('image/')) throw new Error('o link não é de uma imagem');
+  const nome = decodeURIComponent((url.split(/[?#]/)[0].split('/').pop() || 'imagem')).slice(0, 60) || 'imagem';
+  return new File([blob], nome, { type: blob.type });
+}
+
 // Devolve { blob, name } pronto para enviar (JPEG ou PNG).
 async function prepararImagem(f) {
   const tipo = tipoDe(f);

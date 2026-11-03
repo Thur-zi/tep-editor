@@ -647,7 +647,9 @@ viewport.addEventListener('pointerleave', () => { if (hoverId) { hoverId = null;
 viewport.addEventListener('dragover', (e) => { e.preventDefault(); });
 viewport.addEventListener('drop', async (e) => {
   e.preventDefault();
-  const f = [...(e.dataTransfer.files || [])].find(ehImagem);
+  let f;
+  try { f = await imagemDeTransferencia(e.dataTransfer); }
+  catch (err) { toast('Não consegui usar a imagem: ' + err.message + '.', 7000); return; }
   if (!f) return;
   const p = toPt(e);
   const hit = elAt(e);
@@ -691,7 +693,9 @@ function effectiveDpi(el) {
 async function enviarImagem(file) {
   try {
     const { blob, name } = await prepararImagem(file);
-    return await Uploads.add(blob, name);
+    const up = await Uploads.add(blob, name);
+    toast('Imagem adicionada.', 1500);
+    return up;
   } catch (e) {
     console.error(e);
     toast(`Não consegui usar "${file.name}": ${e.message || e}. Tente salvar como JPG ou PNG.`, 7000);
@@ -831,6 +835,20 @@ function nudge(dx, dy) {
   paintNode(nodes.get(el.id), el); renderOverlay(); updatePanelGeom();
   clearTimeout(nudge._t); nudge._t = setTimeout(commit, 400);
 }
+
+// Ctrl+V com uma imagem copiada: troca a foto selecionada ou adiciona uma nova no meio da página
+document.addEventListener('paste', async (e) => {
+  const t = e.target;
+  if (t && (t.isContentEditable || /^(input|textarea|select)$/i.test(t.tagName))) return;
+  let f;
+  try { f = await imagemDeTransferencia(e.clipboardData); }
+  catch (err) { toast('Não consegui colar a imagem: ' + err.message + '.', 7000); return; }
+  if (!f) return;
+  e.preventDefault();
+  const el = selected();
+  if (el && el.type === 'image' && !el.locked) await replaceImage(el, f);
+  else await addImageFromFile(f, { x: PAGE_W / 2, y: PAGE_H / 2 });
+});
 
 document.addEventListener('keydown', (e) => {
   const tag = (e.target.tagName || '').toLowerCase();
