@@ -80,6 +80,32 @@ const ASSETS = [
   { src: 'assets/cabecalho.png', name: 'Cabeçalho', nw: 2784, nh: 601, k: 1 },
 ];
 
+// Itens "mestres": ficam sempre na mesma posição em todas as páginas de matéria (como a página-mestre do InDesign).
+const MESTRE = {
+  'Faixa da editoria': { x: 56.7, y: 85, w: 659, h: 40.1 },
+  'Editoria': { x: 56.7, y: 92.07, w: 659, h: 28 },
+};
+// Área útil: tudo precisa ficar entre as margens (o rodapé termina em 1020,5).
+const AREA = { l: 56.7, r: 715.7, t: 56.7, b: 1020.5 };
+
+// Recoloca a faixa e o nome da editoria no lugar padrão e trava a posição deles. Devolve true se mudou algo.
+function aplicarMestre(p) {
+  let mudou = false;
+  for (const el of p.elements || []) {
+    const m = MESTRE[el.name];
+    if (!m) continue;
+    for (const k of ['x', 'y', 'w', 'h']) if (Math.abs((el[k] || 0) - m[k]) > 0.01) { el[k] = m[k]; mudou = true; }
+    if (!el.locked) { el.locked = true; mudou = true; }
+  }
+  return mudou;
+}
+
+// Itens que passam das margens (tolerância de 1 pt). O cabeçalho da capa segue o original e fica de fora da conta.
+function foraDaMargem(p) {
+  return (p.elements || []).filter(e => !e.hidden && e.name !== 'Cabeçalho' &&
+    (e.x < AREA.l - 1 || e.x + e.w > AREA.r + 1 || e.y < AREA.t - 1 || e.y + e.h > AREA.b + 1));
+}
+
 function uid() {
   return Math.random().toString(36).slice(2, 10);
 }
@@ -748,18 +774,18 @@ function templateP2() {
     }));
     if (legenda) {
       tiles.push(textEl({
-        name: `Legenda ${i + 1}`, text: legenda, font: 'RobotoCondensed-Bold', size: 12.4, lh: 15.6,
-        color: '#ea5b27', align: 'center', x: x - 6, y: y + S + 6, w: S + 12, h: 32,
+        name: `Legenda ${i + 1}`, text: legenda, font: 'RobotoCondensed-Bold', size: 11.8, lh: 15,
+        color: '#ea5b27', align: 'center', x, y: y + S + 6, w: S, h: 30,
       }));
     }
   });
   tiles.push(textEl({
     name: 'Legenda da visita técnica', text: 'Visita técnica Diamante/Olaria – Avaliar melhorias na sinalização',
-    font: 'RobotoCondensed-Bold', size: 12.4, lh: 15.6, color: '#ea5b27', align: 'center',
-    x: MARGIN.l, y: ys[0] + S + 6, w: xs[1] + S - MARGIN.l, h: 16,
+    font: 'RobotoCondensed-Bold', size: 11.8, lh: 15, color: '#ea5b27', align: 'center',
+    x: MARGIN.l, y: ys[0] + S + 6, w: xs[1] + S - MARGIN.l, h: 15,
   }));
   return {
-    id: uid(), tid: 'p2', tver: 5, name: 'Dia a dia em ação', elements: [
+    id: uid(), tid: 'p2', tver: 6, name: 'Dia a dia em ação', elements: [
       rectEl({ name: 'Faixa da editoria', fill: COLORS.laranjaFaixa, x: 56.7, y: 85, w: 659, h: 40.1, locked: true }),
       textEl({
         name: 'Editoria', text: 'DIA A DIA EM AÇÃO', font: 'Roboto-Regular', size: 23.2, lh: 28,
@@ -773,11 +799,11 @@ function templateP2() {
       // rodapé: ícone do Instagram + texto, centralizados juntos
       imageEl({
         name: 'Ícone do Instagram', src: 'assets/icone-instagram.svg', nw: 512, nh: 512,
-        x: 171, y: 1006.4, w: 17, h: 17, ix: 0, iy: 0, iw: 17,
+        x: 171, y: 1002, w: 17, h: 17, ix: 0, iy: 0, iw: 17,
       }),
       textEl({
         name: 'Rodapé', text: '@wanderleyporto Conheça mais o trabalho do vereador!', font: 'Roboto-Bold', size: 16, lh: 20,
-        color: COLORS.preto, align: 'left', x: 194, y: 1004.9, w: 412, h: 20,
+        color: COLORS.preto, align: 'left', x: 194, y: 1000.5, w: 412, h: 20,
       }),
     ],
   };
@@ -817,6 +843,6 @@ function legacySig(p) {
 function defaultState() {
   const pages = [templateCapa(), templateP2(), templateP3(), templateP4(), templateP5(), templateP6(), templateP7(), templateP8()];
   // id fixo por página do modelo: se duas pessoas abrirem o editor ao mesmo tempo, não duplica
-  pages.forEach(p => { p.id = 'tpl-' + p.tid; p.tsig = pageSig(p); });
+  pages.forEach(p => { aplicarMestre(p); p.id = 'tpl-' + p.tid; p.tsig = pageSig(p); });
   return { version: 1, cur: 0, pages, seenTids: pages.map(p => p.tid) };
 }

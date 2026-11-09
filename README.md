@@ -18,6 +18,9 @@ no tamanho real de impressão (772,4 × 1077,2 pt ≈ 27,2 × 38 cm).
 - **Páginas:** coluna da esquerda. Há modelos de capa, de matéria (faixa laranja, título, linha fina, texto, foto, citação) e de página em branco.
 - **Atalhos:** Ctrl+Z / Ctrl+Shift+Z, Ctrl+D duplica, Delete apaga, setas movem 1 pt (Shift = 10 pt),
   Shift mantém proporção, Alt desliga o encaixe nas guias, Ctrl + rodinha dá zoom.
+- **Padrão das páginas:** todas têm o mesmo tamanho da edição de outubro (772,4 × 1077,2 pt). A faixa e o nome da
+  editoria ficam travados na mesma posição em todas as páginas (voltam ao lugar se alguém mexer), e itens que passam
+  das margens (56,7–715,7 na largura, até 1020,5 embaixo) aparecem com contorno laranja e geram aviso antes do PDF.
 - **Várias edições:** a lista no alto troca o TEP aberto; **＋ Novo TEP** cria uma edição nova (do zero ou copiando
   outra) e ✎ muda o nome. Cada edição fica salva separadamente, e o link da página guarda a edição (`?ed=...`).
 - **Edição compartilhada:** o jornal fica num banco de dados (Supabase) e qualquer pessoa com o link edita a

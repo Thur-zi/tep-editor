@@ -112,6 +112,7 @@ function loadState() {
   try {
     const s = JSON.parse(localStorage.getItem(STORAGE_KEY));
     if (s && s.pages && s.pages.length) {
+      s.pages.forEach(aplicarMestre);
       const added = addNewTemplatePages(s).concat(autoUpdateUntouched(s));
       const updated = s.pages.filter(hasTemplateUpdate).map(p => p.name);
       const msg = [];
@@ -201,6 +202,7 @@ function persist() {
 }
 
 function commit() {
+  if (state && page()) aplicarMestre(page());   // faixa e editoria sempre no lugar padrão
   const s = JSON.stringify(state);
   if (s === hist.last) return;
   hist.past.push(hist.last);
@@ -291,6 +293,7 @@ function paintNode(n, el, forExport) {
   st.height = el.h + 'px';
   st.opacity = (el.opacity ?? 100) / 100;
   n.classList.toggle('hidden', !!el.hidden);
+  if (!forExport) n.classList.toggle('fora', foraDaMargem({ elements: [el] }).length > 0);
   n.classList.toggle('locked', !!el.locked);
 
   if (el.type === 'text') {

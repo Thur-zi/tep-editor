@@ -127,6 +127,7 @@ Sync.init = async function () {
       if (r.data && r.data.tid) s.seenTids.push(r.data.tid);
       if (!r.deleted) s.pages.push(pageFromData(r.id, r.data));
     }
+    s.pages.forEach(aplicarMestre);   // páginas fora do padrão são corrigidas (e gravadas) ao abrir
     // só a edição do modelo recebe páginas novas/atualizadas de js/template.js
     const changed = this.edition === TEMPLATE_EDITION ? addNewTemplatePages(s).concat(autoUpdateUntouched(s)) : [];
     if (!s.pages.length) s.pages.push(templateBranco());

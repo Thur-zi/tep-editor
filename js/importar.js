@@ -147,7 +147,7 @@ function paginasDoJSON(dados, avisos) {
       name: String(p.name || 'Página da IA').slice(0, 60),
       elements: p.elements.map(o => normalizarElemento(o || {}, avisos)).filter(Boolean),
     };
-  });
+  }).map(p => { aplicarMestre(p); return p; });   // faixa e editoria no lugar padrão
 }
 
 function abrirColar() {

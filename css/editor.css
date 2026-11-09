@@ -126,6 +126,7 @@ h4 { font-size: 13px; margin: 16px 0 6px; }
 }
 #page .el { cursor: move; }
 #page .el.locked { cursor: default; }
+#page .el.fora { outline: 1.5px dashed #ff8c1a; outline-offset: 1px; }
 #page .el-text.overflow { outline: 1.5px dashed #e53935; outline-offset: 0; }
 
 /* overlay de seleção */

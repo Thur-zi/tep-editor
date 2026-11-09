@@ -114,8 +114,18 @@ async function fontBase64(key) {
   return btoa(s);
 }
 
+// Antes de gerar o PDF: avisa se algum item passa das margens (mesmo tamanho e posição em todas as páginas)
+function conferirMargens() {
+  const problemas = state.pages.map((p, i) => ({ n: i + 1, nome: p.name, itens: foraDaMargem(p).map(e => e.name || e.type) }))
+    .filter(x => x.itens.length);
+  if (!problemas.length) return true;
+  const lista = problemas.map(x => `• Pág. ${x.n} (${x.nome}): ${x.itens.slice(0, 4).join(', ')}${x.itens.length > 4 ? '…' : ''}`).join('\n');
+  return confirm(`Estes itens passam das margens da página (aparecem com contorno laranja no editor):\n\n${lista}\n\nBaixar mesmo assim?`);
+}
+
 async function exportPDF(web) {
   if (editingId) stopEditing();
+  if (!conferirMargens()) return;
   toast(web ? 'Gerando a versão web…' : 'Gerando o PDF…', 60000);
   try {
     const { jsPDF } = window.jspdf;
